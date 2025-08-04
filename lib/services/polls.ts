@@ -1,6 +1,6 @@
 import { any, optional } from 'zod';
 import { createClient } from '../supabase/client'
-import { Poll } from '../types'
+import { Poll, PollOption } from '../types'
 import { CreatePollData } from '../schemas/poll';
 
 export const fetchPolls = async (): Promise<Poll[]> => {
@@ -42,7 +42,7 @@ export const fetchPolls = async (): Promise<Poll[]> => {
   })
 };
 
-export const fetchPollById = async (id: string): Promise<Poll | null> => {
+export const fetchPollById = async (id: string | string[]): Promise<Poll | null> => {
   const { data, error } = await createClient()
     .from('polls')
     .select(`
@@ -74,7 +74,7 @@ export const fetchPollById = async (id: string): Promise<Poll | null> => {
 
   const totalVotes = data.votes.length;
 
-  const optionsWithPercentage = optionWithVotes.map(option => ({
+  const optionsWithPercentage = optionWithVotes.map((option: PollOption) => ({
     ...option,
     percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
   }));
