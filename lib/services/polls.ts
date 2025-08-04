@@ -1,10 +1,10 @@
 import { any, optional } from 'zod';
-import { supabase } from '../supabase/client'
+import { createClient } from '../supabase/client'
 import { Poll } from '../types'
 import { CreatePollData } from '../schemas/poll';
 
 export const fetchPolls = async (): Promise<Poll[]> => {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .from('polls')
     .select(`
       id, 
@@ -43,7 +43,7 @@ export const fetchPolls = async (): Promise<Poll[]> => {
 };
 
 export const fetchPollById = async (id: string): Promise<Poll | null> => {
-  const { data, error } = await supabase
+  const { data, error } = await createClient()
     .from('polls')
     .select(`
       id,
@@ -88,7 +88,8 @@ export const fetchPollById = async (id: string): Promise<Poll | null> => {
 
 
 export const createPoll = async (pollData: CreatePollData, userId: string): Promise<Poll> => {
-  const { data, error } = supabase
+  let supabase = createClient();
+  const { data, error } = await supabase
     .from('poll')
     .insert({
       question: pollData.question,
@@ -121,7 +122,7 @@ export const createPoll = async (pollData: CreatePollData, userId: string): Prom
 
 
 export const voteOnPoll = async (pollId: string, optionIndex: number, userId?: string): Promise<Poll> => {
-  const { error } = await supabase
+  const { error } = await createClient()
     .from('votes')
     .insert({
       poll_id: pollId,
