@@ -86,7 +86,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
 }
 
 
-export const createPoll = async (pollData: CreatePollData, userId: string): Promise<Poll> => {
+export const createPoll = async (pollData: CreatePollData, userId: string | null): Promise<Poll> => {
   const supabase = createClient();
   const { data, error } = await supabase
     .from('poll')
