@@ -1,4 +1,3 @@
-import { any, optional } from 'zod';
 import { createClient } from '../supabase/client'
 import { Poll, PollOption } from '../types'
 import { CreatePollData } from '../schemas/poll';
@@ -64,7 +63,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
 
   // get votes for each option in the poll
   const optionWithVotes = data.options.map((text: string, index: number) => {
-    const votesForOption = data.votes.filter((vote: any) => { vote.option_index === index }).length;
+    const votesForOption = data.votes.filter((vote) => vote.option_index === index).length;
     return {
       id: index,
       text,
@@ -88,7 +87,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
 
 
 export const createPoll = async (pollData: CreatePollData, userId: string): Promise<Poll> => {
-  let supabase = createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('poll')
     .insert({

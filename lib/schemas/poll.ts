@@ -10,7 +10,7 @@ export const PollOptionSchema = z.object({
 export const CreatePollSchema = z.object({
   question: z.string().min(5, "Question must be at least 5 characters"),
   options: z.array(z.string().min(1, "Option cannot be empty")).min(2, "At least two options are required"),
-  isAnonymous: z.boolean().default(false)
+  isAnonymous: z.boolean()//.default(false)
 });
 
 export const VoteSchema = z.object({

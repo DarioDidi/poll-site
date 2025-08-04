@@ -18,7 +18,7 @@ const VoteForm = ({ poll }: VoteFormProps) => {
     setIsSubmitting(true);
     setError(null);
 
-    let supabase = createClient();
+    const supabase = createClient();
     try {
       const { data: { user } } = await supabase.auth.getUser();
 
@@ -33,6 +33,7 @@ const VoteForm = ({ poll }: VoteFormProps) => {
       setIsSubmitting(false);
     }
   }
+
   return (
     <div className="space-y-4">
       {poll.options.map((option) => (
