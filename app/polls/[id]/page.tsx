@@ -1,13 +1,14 @@
 'use client'
 
 import PollChart from "@/components/charts/PollChart";
-import Footer from "@/components/common/Footer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import VoteForm from "@/components/polls/VoteForm";
+import { PollOption } from "@/lib/schemas/poll";
 import { fetchPollById } from "@/lib/services/polls";
 import { createClient } from "@/lib/supabase/client";
-import { Poll, PollsUser } from "@/lib/types";
+import { Poll } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
+import { subscribe } from "diagnostics_channel";
 import { useRouter } from "next/navigation"
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from "react";
@@ -23,10 +24,10 @@ const PollPage = () => {
 
 	//fetch a poll by id
 	useEffect(() => {
+		const supabase = createClient()
 		if (!id) return;
 		const fetchPoll = async () => {
 			try {
-				const supabase = createClient()
 				setLoading(true);
 				const currPoll = await fetchPollById(id);
 				const { data: { user } } = await supabase.auth.getUser();
@@ -40,7 +41,27 @@ const PollPage = () => {
 		}
 		fetchPoll();
 
-		//TODO: SETUP subscription
+		// Set up real-time subcription
+
+		const subscription = supabase
+			.channel(`poll:$id`)
+			.on('postgres_changes', {
+				event: 'INSERT',
+				schema: 'public',
+				table: 'votes',
+				filter: `poll_id=eq.${id}`
+			},
+				async () => {
+					// Refresh on new poll
+					const data = await fetchPollById(id)
+					setPoll(data);
+				}
+			)
+			.subscribe();
+
+		return () => {
+			supabase.removeChannel(subscription);
+		};
 	}, [id]);
 
 
@@ -94,29 +115,30 @@ const PollPage = () => {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{
 					vote_cast ?
-						<div className="rounded-lg shadow-md p-6">
-							<h2 className="text-xl font-semibold mb-4">Already voted! for: <span className="text-green-400">
-								{
-									poll.options[vote_cast.optionIndex].text
-								}
-							</span>
-							</h2>
-						</div>
+						<>
+							<div className="rounded-lg shadow-md p-6">
+								<h2 className="text-xl font-semibold mb-4">
+									Already voted! for: <span className="text-green-400">
+										{poll.options[vote_cast.optionIndex].text}
+									</span>
+								</h2>
+							</div>
+							<div className="rounded-lg shadow-md p-6">
+								<h2 className="text-xl font-semibold mb-4">Live Results</h2>
+								<PollChart poll={poll} />
+								<div className="mt-4">
+									<p className="text-gray-600 text-sm">
+										Total votes: <span className="font-semibold">{poll.totalVotes}</span>
+									</p>
+								</div>
+							</div>
+						</>
 						:
 						<div className="rounded-lg shadow-md p-6">
 							<h2 className="text-xl  font-semibold mb-4">Vote Now</h2>
 							<VoteForm poll={poll} />
 						</div>
 				}
-				<div className="rounded-lg shadow-md p-6">
-					<h2 className="text-xl font-semibold mb-4">Live Results</h2>
-					<PollChart poll={poll} />
-					<div className="mt-4">
-						<p className="text-gray-600 text-sm">
-							Total votes: <span className="font-semibold">{poll.totalVotes}</span>
-						</p>
-					</div>
-				</div>
 			</div>
 		</div >
 	);
