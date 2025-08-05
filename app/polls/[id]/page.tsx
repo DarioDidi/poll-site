@@ -1,6 +1,7 @@
 'use client'
 
 import PollChart from "@/components/charts/PollChart";
+import Footer from "@/components/common/Footer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import VoteForm from "@/components/polls/VoteForm";
 import { fetchPollById } from "@/lib/services/polls";
@@ -96,6 +97,7 @@ const PollPage = () => {
 					</div>
 				</div>
 			</div>
+			<Footer />
 		</div>
 	);
 }

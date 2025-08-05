@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/common/Button";
 import { FaCheck, FaPlus, FaQuestion, FaTrash } from "react-icons/fa";
+import Footer from "@/components/common/Footer";
 
 type FormData = z.infer<typeof CreatePollSchema>
 //type FormData = z.input<typeof CreatePollSchema>, any, z.output<typeof CreatePollSchema>;
@@ -205,6 +206,7 @@ const CreatePollPage = () => {
           </Button>
         </div>
       </form>
+      <Footer />
     </div>
   );
 }

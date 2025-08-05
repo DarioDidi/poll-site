@@ -1,3 +1,5 @@
+'use client';
+
 import { createClient } from "@/lib/supabase/client";
 import { fetchPollsAsync } from "@/store/features/pollSlice";
 import { AppDispatch, RootState } from "@/store/store"
@@ -27,15 +29,24 @@ const PollList = () => {
 
   }, [dispatch, supabase]);
 
-  if (loading) return <div>Loading polls...</div>;
+  if (loading) return <div>Loading polls one sec...</div>;
   if (error) return <div>Error: {error}</div>;
 
+
+  console.log("Polls:", polls);
+
+  if (polls.length === 0) {
+    return <p>No polls yet :(</p>
+
+  }
   return (
-    <div className="grid gird-cols-22 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 mt-10">
+    <div className="grid grid-cols-22 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 mt-10">
       {
-        polls.map(poll => (
-          <PollCard key={poll.id} poll={poll} />
-        ))
+        polls
+          ? polls.map(poll => (
+            <PollCard key={poll.id} poll={poll} />
+          ))
+          : "No polls yet :("
       }
     </div>
   )
