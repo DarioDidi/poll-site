@@ -41,3 +41,7 @@ export interface ApiResponse<T> {
   error?: string;
   success: boolean;
 }
+
+export interface ErrorResponseData {
+  message: string
+}

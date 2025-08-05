@@ -3,12 +3,10 @@
 import PollChart from "@/components/charts/PollChart";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import VoteForm from "@/components/polls/VoteForm";
-import { PollOption } from "@/lib/schemas/poll";
 import { fetchPollById } from "@/lib/services/polls";
 import { createClient } from "@/lib/supabase/client";
 import { Poll } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
-import { subscribe } from "diagnostics_channel";
 import { useRouter } from "next/navigation"
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from "react";
@@ -33,7 +31,7 @@ const PollPage = () => {
 				const { data: { user } } = await supabase.auth.getUser();
 				setPoll(currPoll)
 				setUser(user);
-			} catch (err: unknown) {
+			} catch (err) {
 				setError(err.message);
 			} finally {
 				setLoading(false);
@@ -93,6 +91,8 @@ const PollPage = () => {
 	}
 
 	const vote_cast = poll.votes.find((e) => e.userId === user?.id);
+	//console.log("vote cast:", vote_cast, "poll.options:", poll.options);
+	//console.log(poll.options[vote_cast!.optionIndex]);
 	return (
 		<div className="max-w-4xl mx-auto py-8 px-4">
 			<div className="mb-8">
@@ -125,12 +125,12 @@ const PollPage = () => {
 							</div>
 							<div className="rounded-lg shadow-md p-6">
 								<h2 className="text-xl font-semibold mb-4">Live Results</h2>
-								<PollChart poll={poll} />
-								<div className="mt-4">
+								<div className="mt-1">
 									<p className="text-gray-600 text-sm">
 										Total votes: <span className="font-semibold">{poll.totalVotes}</span>
 									</p>
 								</div>
+								<PollChart poll={poll} />
 							</div>
 						</>
 						:

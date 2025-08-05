@@ -8,6 +8,7 @@ interface PollCardProps {
 }
 
 const PollCard: React.FC<PollCardProps> = ({ poll }) => {
+  console.log("Poll card poll:", poll);
   const formattedDate = new Date(poll.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -15,14 +16,14 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
   });
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+    <div className="bg-white rounded-lg shadow-green-500 overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg">
       <div className="p-6">
         <h3 className="text-xl font-semibold text-gray-800 mb-2">{poll.question}</h3>
 
         <div className="flex items-center text-gray-600 mb-4">
           <FaUser className="mr-2" />
           <span className="text-sm">
-            {poll.isAnonymous ? 'Anonymous poll' : `By ${poll.creator?.name || poll.creator?.email}`}
+            {poll.isAnonymous ? 'Anonymous poll' : `By ${poll.creator?.email || poll.creator?.email}`}
           </span>
         </div>
 

@@ -23,29 +23,38 @@ export const fetchPolls = async (): Promise<Poll[]> => {
       createdAt:created_at,
       creatorId:creator_id,
       creator:users(id, email),
-      votes:votes(count)
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
     `).order('created_at', { ascending: false });
 
+  //votes:votes(count, pollId:poll_id, userId:user_id, optionIndex:option_index)
   if (error) {
     console.error('Error fetching polls:', error);
     throw error;
   }
 
+  console.log("poll:", data);
+
   return data.map(poll => {
-    const totalVotes = poll.votes[0]?.count || 0;
+    const totalVotes = poll.votes.length || 0;
     const optionsWithVotes = poll.options.map((text: string, index: number) => {
+      const votesForOption = poll.votes.filter((vote) => vote.optionIndex === index).length;
       return {
         id: index,
         text,
-        votes: 0, //to be updated
-        percentage: 0,
-      };
+        votes: votesForOption
+      }
     });
+
+    const optionsWithPercentage = optionsWithVotes.map((option: PollOption) => ({
+      ...option,
+      percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
+    }));
 
 
     return {
       ...poll,
-      options: optionsWithVotes,
+      creator: poll.creator,
+      options: optionsWithPercentage,
       totalVotes,
     };
   })
@@ -62,7 +71,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
       createdAt:created_at,
       creatorId:creator_id,
       creator:users(id, email),
-      votes:votes(optionIndex:option_index, userId:user_id)
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
     `).eq('id', id)
     .single();
 
@@ -88,8 +97,11 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
     percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
   }));
 
+  console.log("options w %:", optionsWithPercentage);
+
   return {
     ...data,
+    creator: data.creator,
     options: optionsWithPercentage,
     totalVotes,
   }
