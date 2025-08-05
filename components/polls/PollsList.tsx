@@ -35,18 +35,14 @@ const PollList = () => {
 
   console.log("Polls:", polls);
 
-  if (polls.length === 0) {
-    return <p>No polls yet :(</p>
-
-  }
   return (
     <div className="grid grid-cols-22 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 mt-10">
       {
-        polls
-          ? polls.map(poll => (
+        polls.length === 0
+          ? <p className="text-center justify-center">No polls yet :(</p>
+          : polls.map(poll => (
             <PollCard key={poll.id} poll={poll} />
           ))
-          : "No polls yet :("
       }
     </div>
   )

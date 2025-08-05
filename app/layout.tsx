@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store';
 import { Providers } from "./Providers";
 import Footer from "@/components/common/Footer";
+import NavBar from "@/components/common/NavBar";
 
 //const defaultUrl = process.env.VERCEL_URL
 //  ? `https://${process.env.VERCEL_URL}`
@@ -39,6 +40,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
+            <NavBar />
             {children}
           </Providers>
         </ThemeProvider>
