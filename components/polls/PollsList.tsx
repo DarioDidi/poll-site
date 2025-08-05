@@ -35,8 +35,9 @@ const PollList = () => {
 
   console.log("Polls:", polls);
 
+  {/*<div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 mt-10">*/ }
   return (
-    <div className="grid grid-cols-22 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 mt-10">
+    <div className="grid:grid-cols">
       {
         polls.length === 0
           ? <p className="text-center justify-center">No polls yet :(</p>
@@ -44,7 +45,7 @@ const PollList = () => {
             <PollCard key={poll.id} poll={poll} />
           ))
       }
-    </div>
+    </div >
   )
 };
 

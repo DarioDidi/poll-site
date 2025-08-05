@@ -2,16 +2,26 @@ import { createClient } from '../supabase/client'
 import { Poll, PollOption } from '../types'
 import { CreatePollData } from '../schemas/poll';
 
+export const getCurrentUser = async () => {
+  const supabase = createClient();
+  // You can also use getUser() which will be slower.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
+  return user;
+}
+
 export const fetchPolls = async (): Promise<Poll[]> => {
-  const { data, error } = await createClient()
+  const supabase = createClient();
+
+  const { data, error } = await supabase
     .from('polls')
     .select(`
       id, 
       question,
       options,
-      is_anonymous,
-      created_at,
-      creator_id,
+      isAnonymous:is_anonymous,
+      createdAt:created_at,
+      creatorId:creator_id,
       creator:users(id, email),
       votes:votes(count)
     `).order('created_at', { ascending: false });
@@ -48,11 +58,11 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
       id,
       question,
       options,
-      is_anonymous,
-      created_at,
-      creator_id,
+      isAnonymous:is_anonymous,
+      createdAt:created_at,
+      creatorId:creator_id,
       creator:users(id, email),
-      votes:votes(option_index, user_id)
+      votes:votes(optionIndex:option_index, userId:user_id)
     `).eq('id', id)
     .single();
 
@@ -63,7 +73,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
 
   // get votes for each option in the poll
   const optionWithVotes = data.options.map((text: string, index: number) => {
-    const votesForOption = data.votes.filter((vote) => vote.option_index === index).length;
+    const votesForOption = data.votes.filter((vote) => vote.optionIndex === index).length;
     return {
       id: index,
       text,

@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { Providers } from "./Providers";
 import NavBar from "@/components/common/NavBar";
+import Footer from "@/components/common/Footer";
 
 //const defaultUrl = process.env.VERCEL_URL
 //  ? `https://${process.env.VERCEL_URL}`
@@ -40,6 +41,7 @@ export default function RootLayout({
           <Providers>
             <NavBar />
             {children}
+            <Footer />
           </Providers>
         </ThemeProvider>
       </body>

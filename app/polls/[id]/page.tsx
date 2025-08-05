@@ -5,7 +5,9 @@ import Footer from "@/components/common/Footer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import VoteForm from "@/components/polls/VoteForm";
 import { fetchPollById } from "@/lib/services/polls";
-import { Poll } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
+import { Poll, PollsUser } from "@/lib/types";
+import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation"
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from "react";
@@ -17,15 +19,19 @@ const PollPage = () => {
 	const [poll, setPoll] = useState<Poll | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [user, setUser] = useState<User | null>(null);
 
 	//fetch a poll by id
 	useEffect(() => {
 		if (!id) return;
 		const fetchPoll = async () => {
 			try {
+				const supabase = createClient()
 				setLoading(true);
 				const currPoll = await fetchPollById(id);
+				const { data: { user } } = await supabase.auth.getUser();
 				setPoll(currPoll)
+				setUser(user);
 			} catch (err: unknown) {
 				setError(err.message);
 			} finally {
@@ -36,6 +42,7 @@ const PollPage = () => {
 
 		//TODO: SETUP subscription
 	}, [id]);
+
 
 
 	if (loading) {
@@ -64,13 +71,14 @@ const PollPage = () => {
 		);
 	}
 
+	const vote_cast = poll.votes.find((e) => e.userId === user?.id);
 	return (
 		<div className="max-w-4xl mx-auto py-8 px-4">
 			<div className="mb-8">
-				<h1 className="text-3xl font-bold text-gray-900 mb-2">{poll.question}</h1>
-				<div className="flex items-center text-gray-600">
+				<h1 className="text-3xl font-bold text-gray-500 mb-2">{poll.question}</h1>
+				<div className="flex items-center text-gray-400">
 					<span className="text-sm">
-						{poll.isAnonymous ? 'Anonymous poll' : `Created by ${poll.creator?.name || poll.creator?.email}`}
+						{poll.isAnonymous ? 'Anonymous poll' : `Created by ${poll.creator?.email}`}
 					</span>
 					<span className="mx-2">•</span>
 					<span className="text-sm">
@@ -84,12 +92,23 @@ const PollPage = () => {
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-				<div className="bg-white rounded-lg shadow-md p-6">
-					<h2 className="text-xl font-semibold mb-4">Vote Now</h2>
-					<VoteForm poll={poll} />
-				</div>
-
-				<div className="bg-white rounded-lg shadow-md p-6">
+				{
+					vote_cast ?
+						<div className="rounded-lg shadow-md p-6">
+							<h2 className="text-xl font-semibold mb-4">Already voted! for: <span className="text-green-400">
+								{
+									poll.options[vote_cast.optionIndex].text
+								}
+							</span>
+							</h2>
+						</div>
+						:
+						<div className="rounded-lg shadow-md p-6">
+							<h2 className="text-xl  font-semibold mb-4">Vote Now</h2>
+							<VoteForm poll={poll} />
+						</div>
+				}
+				<div className="rounded-lg shadow-md p-6">
 					<h2 className="text-xl font-semibold mb-4">Live Results</h2>
 					<PollChart poll={poll} />
 					<div className="mt-4">
@@ -99,8 +118,7 @@ const PollPage = () => {
 					</div>
 				</div>
 			</div>
-			<Footer />
-		</div>
+		</div >
 	);
 }
 

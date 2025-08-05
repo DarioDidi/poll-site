@@ -1,7 +1,7 @@
-export interface User {
+export interface PollsUser {
   id: string;
   email: string;
-  name: string;
+  //name: string;
 }
 
 export interface Poll {
@@ -11,8 +11,9 @@ export interface Poll {
   isAnonymous: boolean;
   createdAt: Date;
   creatorId: string;
-  creator?: User;
+  creator?: PollsUser | null;
   totalVotes: number;
+  votes: Vote[];
 }
 
 export interface PollOption {
