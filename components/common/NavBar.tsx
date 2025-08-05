@@ -7,9 +7,8 @@ import { createClient } from "@/lib/supabase/server";
 const NavBar = async () => {
   const supabase = await createClient();
   // You can also use getUser() which will be slower.
-  const { data } = await supabase.auth.getClaims();
-
-  const user = data?.claims;
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
 
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">

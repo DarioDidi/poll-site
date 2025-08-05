@@ -177,7 +177,7 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[] 
       creator:users(id, email),
       votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
     `)
-    .eq('users.id', userId)
+    .eq('creator.id', userId)
     .order('created_at', { ascending: false });
 
   //.single();

@@ -1,7 +1,6 @@
 'use client';
 
 import { createClient } from "@/lib/supabase/client";
-import { fetchPollsAsync } from "@/store/features/pollSlice";
 import { AppDispatch, RootState } from "@/store/store"
 import { useDispatch, useSelector } from "react-redux"
 import { User } from "@supabase/supabase-js";
@@ -18,11 +17,11 @@ import LoadingSpinner from "../common/LoadingSpinner";
 const UserPolls = () => {
   const dispatch = useDispatch<AppDispatch>();
   //const { polls, loading, error } = useSelector((state: RootState) => state.polls);
-  const supabase = createClient();
   const router = useRouter();
 
-  const params = useParams<{ userId: string }>()
-  const { userId } = params;
+  const params = useParams<{ id: string }>()
+  const { id } = params;
+  const userId = id;
   const [polls, setPolls] = useState<Poll[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,15 +29,19 @@ const UserPolls = () => {
 
   //fetch a poll by id
   useEffect(() => {
-    const supabase = createClient()
+    const supabase = createClient();
+    console.log("before id:", userId);
     if (!userId) return;
     const fetchPolls = async () => {
       try {
         setLoading(true);
+        console.log("BEFORE POLLS IN USEREFFECT");
         const userPolls = await fetchUserPolls(userId);
+        console.log("AFTER POLLS IN USEREFFECT");
         const { data: { user } } = await supabase.auth.getUser();
         setPolls(userPolls)
         setUser(user);
+        console.log("AFTER SETS IN USEREFFECT");
       } catch (err) {
         setError(err.message);
       } finally {
@@ -70,7 +73,7 @@ const UserPolls = () => {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [userId]);
+  }, []);
 
 
 
@@ -80,6 +83,12 @@ const UserPolls = () => {
         <LoadingSpinner />
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500 text-sm mt-2">{error}</div>
+    )
   }
 
   console.log("Polls:", polls);
