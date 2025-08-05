@@ -3,6 +3,11 @@ import { Poll, PollOption } from '../types'
 import { CreatePollData } from '../schemas/poll';
 
 export const fetchPolls = async (): Promise<Poll[]> => {
+
+  //const supabase = createClient()
+  //const { data } = await supabase.auth.getClaims();
+
+  //const user = userdata?.claims;
   const { data, error } = await createClient()
     .from('polls')
     .select(`
@@ -12,7 +17,7 @@ export const fetchPolls = async (): Promise<Poll[]> => {
       is_anonymous,
       created_at,
       creator_id,
-      creator:users(id, email, name),
+      creator:users(id, email),
       votes:votes(count)
     `).order('created_at', { ascending: false });
 
@@ -51,7 +56,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
       is_anonymous,
       created_at,
       creator_id,
-      creator:users(id, email, name),
+      creator:users(id, email),
       votes:votes(option_index, user_id)
     `).eq('id', id)
     .single();

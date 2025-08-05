@@ -6,12 +6,14 @@ import LoadingSpinner from "@/components/common/LoadingSpinner";
 import VoteForm from "@/components/polls/VoteForm";
 import { fetchPollById } from "@/lib/services/polls";
 import { Poll } from "@/lib/types";
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
+import { useParams } from 'next/navigation'
 import { useEffect, useState } from "react";
 
 const PollPage = () => {
 	const router = useRouter();
-	const { id } = router.query;
+	const params = useParams<{ id: string }>()
+	const { id } = params;
 	const [poll, setPoll] = useState<Poll | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ const PollPage = () => {
 				setLoading(true);
 				const currPoll = await fetchPollById(id);
 				setPoll(currPoll)
-			} catch (err) {
+			} catch (err: unknown) {
 				setError(err.message);
 			} finally {
 				setLoading(false);

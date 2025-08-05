@@ -1,17 +1,15 @@
-import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
-import { Provider } from 'react-redux';
-import { store } from '../store/store';
 import { Providers } from "./Providers";
-import Footer from "@/components/common/Footer";
 import NavBar from "@/components/common/NavBar";
 
 //const defaultUrl = process.env.VERCEL_URL
 //  ? `https://${process.env.VERCEL_URL}`
 //  : "http://localhost:3000";
+//
+//TODO: write out metadata
 //
 //export const metadata: Metadata = {
 //  metadataBase: new URL(defaultUrl),

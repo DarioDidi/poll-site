@@ -69,7 +69,7 @@ const CreatePollPage = () => {
 
       //success redirect
       router.push(`/polls/${poll.id}`)
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error creating poll:', err);
       setError(err.message || 'Failed to create poll');
     } finally {
