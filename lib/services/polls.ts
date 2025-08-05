@@ -32,7 +32,6 @@ export const fetchPolls = async (): Promise<Poll[]> => {
     throw error;
   }
 
-  console.log("poll:", data);
 
   return data.map(poll => {
     const totalVotes = poll.votes.length || 0;
@@ -162,4 +161,82 @@ export const voteOnPoll = async (pollId: string, optionIndex: number, userId?: s
   }
 
   return updatedPoll;
+}
+
+
+export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[] | null> => {
+  const { data, error } = await createClient()
+    .from('polls')
+    .select(`
+      id,
+      question,
+      options,
+      isAnonymous:is_anonymous,
+      createdAt:created_at,
+      creatorId:creator_id,
+      creator:users(id, email),
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
+    `)
+    .eq('users.id', userId)
+    .order('created_at', { ascending: false });
+
+  //.single();
+
+  if (error) {
+    console.error('Error fetching poll:', error);
+    return null;
+  }
+
+  console.log("user polls:", data);
+
+  return data.map(poll => {
+    const totalVotes = poll.votes.length || 0;
+    const optionsWithVotes = poll.options.map((text: string, index: number) => {
+      const votesForOption = poll.votes.filter((vote) => vote.optionIndex === index).length;
+      return {
+        id: index,
+        text,
+        votes: votesForOption
+      }
+    });
+
+    const optionsWithPercentage = optionsWithVotes.map((option: PollOption) => ({
+      ...option,
+      percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
+    }));
+
+
+    return {
+      ...poll,
+      creator: poll.creator,
+      options: optionsWithPercentage,
+      totalVotes,
+    };
+  })
+
+  // get votes for each option in the poll
+  // const optionWithVotes = data.options.map((text: string, index: number) => {
+  //   const votesForOption = data.votes.filter((vote) => vote.optionIndex === index).length;
+  //   return {
+  //     id: index,
+  //     text,
+  //     votes: votesForOption
+  //   }
+  // })
+
+  // const totalVotes = data.votes.length;
+
+  // const optionsWithPercentage = optionWithVotes.map((option: PollOption) => ({
+  //   ...option,
+  //   percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
+  // }));
+
+  // console.log("options w %:", optionsWithPercentage);
+
+  // return {
+  //   ...data,
+  //   creator: data.creator,
+  //   options: optionsWithPercentage,
+  //   totalVotes,
+  // }
 }
