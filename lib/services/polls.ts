@@ -3,11 +3,6 @@ import { Poll, PollOption } from '../types'
 import { CreatePollData } from '../schemas/poll';
 
 export const fetchPolls = async (): Promise<Poll[]> => {
-
-  //const supabase = createClient()
-  //const { data } = await supabase.auth.getClaims();
-
-  //const user = userdata?.claims;
   const { data, error } = await createClient()
     .from('polls')
     .select(`
