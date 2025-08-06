@@ -6,7 +6,7 @@ import { store } from "@/store/store";
 
 import { ThemeProvider } from "next-themes";
 
-export function Providers({ children }: { children: ReactNode }) {
+const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <Provider store={store}>
       <ThemeProvider
@@ -20,3 +20,5 @@ export function Providers({ children }: { children: ReactNode }) {
     </Provider>
   );
 }
+
+export default Providers;

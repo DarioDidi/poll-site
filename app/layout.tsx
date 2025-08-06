@@ -2,7 +2,7 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
-import { Providers } from "./Providers";
+import Providers from "@/store/Providers";
 import NavBar from "@/components/common/NavBar";
 import Footer from "@/components/common/Footer";
 
@@ -14,8 +14,8 @@ import Footer from "@/components/common/Footer";
 //
 //export const metadata: Metadata = {
 //  metadataBase: new URL(defaultUrl),
-//  title: "Next.js and Supabase Starter Kit",
-//  description: "The fastest way to build apps with Next.js and Supabase",
+//  title: "Polling site"
+//  description: "Make, manage and participate in surveys"
 //};
 //
 const geistSans = Geist({
