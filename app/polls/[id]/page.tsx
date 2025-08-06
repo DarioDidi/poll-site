@@ -90,6 +90,7 @@ const PollPage = () => {
 		);
 	}
 
+
 	// go back home if error or no poll
 	if (error || !poll) {
 		return (
@@ -178,7 +179,12 @@ const PollPage = () => {
 						:
 						<div className="rounded-lg shadow-md p-6">
 							<h2 className="text-xl  font-semibold mb-4">Vote Now</h2>
-							<VoteForm poll={poll} />
+							<Button
+								onClick={() => router.push(`/polls/${poll.id}/vote`)}
+							>
+								<span className="text-green-500">Vote</span>
+
+							</Button>
 						</div>
 				}
 			</div>

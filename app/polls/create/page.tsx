@@ -85,6 +85,7 @@ const CreatePollPage = () => {
 
       //success redirect
       router.push(`/polls/${poll.id}`)
+      router.refresh()
     } catch (err: unknown) {
       console.error('Error creating poll:', err);
       setError(err.message || 'Failed to create poll');
@@ -202,7 +203,7 @@ const CreatePollPage = () => {
         </div>
 
         <p> Add Expiry: </p>
-        <span className="text-red-300"> NOTE: all surveys last for a max of 7 days</span>
+        <span className="text-red-500"> NOTE: all surveys last for a max of 7 days</span>
         <div className="flex items-center">
           <DatePicker
             showTimeSelect

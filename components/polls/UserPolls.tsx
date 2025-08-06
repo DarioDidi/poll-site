@@ -31,8 +31,8 @@ const UserPolls = () => {
 
         const userPolls = await fetchUserPolls(userId);
         setPolls(userPolls)
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ const UserPolls = () => {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [polls, userId]);
+  }, [userId]);
 
 
 
