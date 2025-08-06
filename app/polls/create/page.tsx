@@ -236,7 +236,6 @@ const CreatePollPage = () => {
           </Button>
         </div>
       </form>
-      <Footer />
     </div>
   );
 }
