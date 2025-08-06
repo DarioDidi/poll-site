@@ -14,6 +14,7 @@ export interface Poll {
   creator?: PollsUser | null;
   totalVotes: number;
   votes: Vote[];
+  expiryDate: Date;
 }
 
 export interface PollOption {

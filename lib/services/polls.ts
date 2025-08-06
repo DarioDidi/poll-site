@@ -22,6 +22,7 @@ export const fetchPolls = async (): Promise<Poll[]> => {
       isAnonymous:is_anonymous,
       createdAt:created_at,
       creatorId:creator_id,
+      expiryDate:expiry_date,
       creator:users(id, email),
       votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
     `).order('created_at', { ascending: false });
@@ -69,6 +70,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
       isAnonymous:is_anonymous,
       createdAt:created_at,
       creatorId:creator_id,
+      expiryDate:expiry_date,
       creator:users(id, email),
       votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
     `).eq('id', id)
@@ -78,6 +80,7 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
     console.error('Error fetching poll:', error);
     return null;
   }
+  console.log("fetched poll:", data)
 
   // get votes for each option in the poll
   const optionWithVotes = data.options.map((text: string, index: number) => {
@@ -174,6 +177,7 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[] 
       isAnonymous:is_anonymous,
       createdAt:created_at,
       creatorId:creator_id,
+      expiryDate:expiry_date,
       creator:users(id, email),
       votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
     `)

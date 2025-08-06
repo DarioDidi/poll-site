@@ -128,6 +128,20 @@ const PollPage = () => {
 								day: 'numeric',
 							})}
 						</span>
+						<span className="mx-2">•</span>
+						<span className="text-sm">
+							{`Expires on `}
+						</span>
+						<span className="mx-2">•</span>
+						<span className="text-sm">
+							{new Date(poll.expiryDate).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric',
+								hour: 'numeric'
+							})}
+						</span>
+
 					</div>
 					{
 						poll.creator && poll.creator?.id === user?.id

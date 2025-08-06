@@ -11,6 +11,9 @@ import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/common/Button";
 import { FaCheck, FaPlus, FaQuestion, FaTrash } from "react-icons/fa";
 import Footer from "@/components/common/Footer";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 type FormData = z.infer<typeof CreatePollSchema>
 //type FormData = z.input<typeof CreatePollSchema>, any, z.output<typeof CreatePollSchema>;
@@ -20,6 +23,10 @@ const CreatePollPage = () => {
   const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const defaultEndDate = new Date();
+  defaultEndDate.setDate(defaultEndDate.getDate() + 7);
+  const [endDate, setEndDate] = useState<Date>(defaultEndDate);
+
 
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<FormData>({
     resolver: zodResolver(CreatePollSchema),
@@ -43,6 +50,14 @@ const CreatePollPage = () => {
     setValue('options', newOptions);
   }
 
+  //Filter for exiration time selector
+  const withinWeek = (date: Date) => {
+    const weekFromNow = new Date();
+    const startDate = new Date();
+    weekFromNow.setDate(startDate.getDate() + 7)
+    return new Date() < date && date < weekFromNow
+  }
+
   const onSubmit = async (data: FormData) => {
     if (!user) {
       setError('You must be logged in to create a poll');
@@ -61,6 +76,7 @@ const CreatePollPage = () => {
           options: data.options.filter(opt => opt.trim() !== ''),
           is_anonymous: data.isAnonymous,
           creator_id: user.id,
+          expiry_date: endDate.toISOString()
         })
         .select()
         .single();
@@ -183,6 +199,20 @@ const CreatePollPage = () => {
           <label htmlFor="isAnonymous" className="ml-2 block text-sm text-gray-700">
             Make this poll anonymous (hide voter identities)
           </label>
+        </div>
+
+        <p> Add Expiry: </p>
+        <span className="text-red-300"> NOTE: all surveys last for a max of 7 days</span>
+        <div className="flex items-center">
+          <DatePicker
+            showTimeSelect
+            selected={endDate}
+            filterDate={withinWeek}
+            onChange={(date) => setEndDate(date)}
+            endDate={endDate}
+            startDate={new Date()}
+            minDate={new Date()}
+          />
         </div>
 
         {error && (

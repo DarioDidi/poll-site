@@ -29,11 +29,11 @@ const VoteForm = ({ poll }: VoteFormProps) => {
         option_index: selectedOption,
         user_id: user?.id || null
       })
+      router.push(`/polls/${poll.id}`)
     } catch (err) {
       setError(err.message || 'Failed to submit vote');
     } finally {
       setIsSubmitting(false);
-      router.refresh();
     }
 
   }
