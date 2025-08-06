@@ -53,7 +53,7 @@ const UserPolls = () => {
     // Set up real-time subcription to changes in votes
     // for polls owned by user
 
-    let pollIds = polls?.map((p) => p.id);
+    const pollIds = polls?.map((p) => p.id)
     const subscription = supabase
       .channel(`user:${userId}`)
       .on('postgres_changes', {

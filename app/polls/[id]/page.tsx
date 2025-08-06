@@ -1,7 +1,9 @@
 'use client'
 
 import PollChart from "@/components/charts/PollChart";
+import Button from "@/components/common/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import DeleteConfirmation from "@/components/polls/DeleteModal";
 import VoteForm from "@/components/polls/VoteForm";
 import { fetchPollById } from "@/lib/services/polls";
 import { createClient } from "@/lib/supabase/client";
@@ -19,6 +21,7 @@ const PollPage = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [user, setUser] = useState<User | null>(null);
+	const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
 	//fetch a poll by id
 	useEffect(() => {
@@ -62,7 +65,22 @@ const PollPage = () => {
 		};
 	}, [id]);
 
-
+	const handleDelete = async (useId: string) => {
+		const supabase = createClient();
+		const { data, error } = await supabase
+			.from('polls')
+			.delete()
+			.eq('id', useId)
+			.select()
+		if (error) {
+			setError(error.message);
+			setModalOpen(false)
+		}
+		else {
+			alert(`Successfully deleted`);
+			router.push("/");
+		}
+	}
 
 	if (loading) {
 		return (
@@ -97,20 +115,30 @@ const PollPage = () => {
 		<div className="max-w-4xl mx-auto py-8 px-4">
 			<div className="mb-8">
 				<h1 className="text-3xl font-bold text-gray-500 mb-2">{poll.question}</h1>
-				<div className="flex items-center text-gray-400">
-					<span className="text-sm">
-						{poll.isAnonymous ? 'Anonymous poll' : `Created by ${poll.creator?.email}`}
-					</span>
-					<span className="mx-2">•</span>
-					<span className="text-sm">
-						{new Date(poll.createdAt).toLocaleDateString('en-US', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric',
-						})}
-					</span>
+				<div className="flex items-center text-gray-400 justify-between">
+					<div>
+						<span className="text-sm">
+							{poll.isAnonymous ? 'Anonymous poll' : `Created by ${poll.creator?.email}`}
+						</span>
+						<span className="mx-2">•</span>
+						<span className="text-sm">
+							{new Date(poll.createdAt).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric',
+							})}
+						</span>
+					</div>
+					{
+						poll.creator && poll.creator?.id === user?.id
+							? <Button variant="danger" onClick={() => setModalOpen(true)}>
+								Delete Poll
+							</Button>
+							: ""
+					}
 				</div>
 			</div>
+
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{
@@ -140,6 +168,17 @@ const PollPage = () => {
 						</div>
 				}
 			</div>
+
+			{
+				isModalOpen &&
+				(<DeleteConfirmation
+					showModal={isModalOpen}
+					hideModal={() => setModalOpen(false)}
+					confirmModal={handleDelete}
+					message={`Are you sure you want to delete poll:${poll.question}`}
+					pollId={poll.id}
+				/>)
+			}
 		</div >
 	);
 }

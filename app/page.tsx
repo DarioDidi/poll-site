@@ -1,9 +1,9 @@
 import { AuthButton } from "@/components/auth-components/auth-button";
 import PollList from "@/components/polls/PollsList";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
