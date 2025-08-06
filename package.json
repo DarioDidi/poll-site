@@ -15,7 +15,6 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
-    "camelcase-keys": "^9.1.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.511.0",
@@ -28,7 +27,6 @@
     "react-loader-spinner": "^6.1.6",
     "react-redux": "^9.2.0",
     "recharts": "^3.1.0",
-    "snakecase-keys": "^9.0.2",
     "tailwind-merge": "^3.3.0",
     "zod": "^4.0.14"
   },

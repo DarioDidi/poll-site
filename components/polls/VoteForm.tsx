@@ -2,12 +2,14 @@ import { createClient } from "@/lib/supabase/client";
 import { Poll } from "@/lib/types";
 import { useState } from "react";
 import Button from "../common/Button";
+import { useRouter } from "next/navigation";
 
 interface VoteFormProps {
   poll: Poll
 }
 
 const VoteForm = ({ poll }: VoteFormProps) => {
+  const router = useRouter()
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,9 @@ const VoteForm = ({ poll }: VoteFormProps) => {
       setError(err.message || 'Failed to submit vote');
     } finally {
       setIsSubmitting(false);
+      router.refresh();
     }
+
   }
 
   return (

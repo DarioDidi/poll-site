@@ -67,7 +67,7 @@ const PollPage = () => {
 
 	const handleDelete = async (useId: string) => {
 		const supabase = createClient();
-		const { data, error } = await supabase
+		const { error } = await supabase
 			.from('polls')
 			.delete()
 			.eq('id', useId)
@@ -172,7 +172,6 @@ const PollPage = () => {
 			{
 				isModalOpen &&
 				(<DeleteConfirmation
-					showModal={isModalOpen}
 					hideModal={() => setModalOpen(false)}
 					confirmModal={handleDelete}
 					message={`Are you sure you want to delete poll:${poll.question}`}

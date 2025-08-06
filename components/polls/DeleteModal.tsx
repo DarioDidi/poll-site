@@ -1,13 +1,12 @@
 import Button from "../common/Button";
 interface DeleteModalProps {
-  showModal: boolean;
   hideModal(): void;
   confirmModal(pollId: string): void;
   message: string;
   pollId: string
 }
 
-const DeleteConfirmation = ({ showModal, hideModal, confirmModal, message, pollId }: DeleteModalProps) => {
+const DeleteConfirmation = ({ hideModal, confirmModal, message, pollId }: DeleteModalProps) => {
   return (
     <div className='fixed inset-0 bg-gray-900 bg-opacity-50 overflow-auto flex justify-self-auto' >
       <div className="flex items-center bg-white rounded-lg p-8 shadow-lg w-full max-w-md overflow-scroll m-auto">

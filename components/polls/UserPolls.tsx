@@ -1,10 +1,6 @@
 'use client';
 
 import { createClient } from "@/lib/supabase/client";
-import { AppDispatch, RootState } from "@/store/store"
-import { useDispatch, useSelector } from "react-redux"
-import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation"
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from "react";
 import PollCard from "./PollCard";
@@ -13,35 +9,28 @@ import { Poll } from "@/lib/types";
 import LoadingSpinner from "../common/LoadingSpinner";
 
 
-//const UserPolls = (userId: string) => {
 const UserPolls = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  //const { polls, loading, error } = useSelector((state: RootState) => state.polls);
-  const router = useRouter();
-
   const params = useParams<{ id: string }>()
   const { id } = params;
   const userId = id;
   const [polls, setPolls] = useState<Poll[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
 
+  console.log("in user polls");
   //fetch a poll by id
   useEffect(() => {
     const supabase = createClient();
-    console.log("before id:", userId);
     if (!userId) return;
     const fetchPolls = async () => {
       try {
         setLoading(true);
-        console.log("BEFORE POLLS IN USEREFFECT");
-        const userPolls = await fetchUserPolls(userId);
-        console.log("AFTER POLLS IN USEREFFECT");
         const { data: { user } } = await supabase.auth.getUser();
+
+        if (!(userId == user?.id)) return;
+
+        const userPolls = await fetchUserPolls(userId);
         setPolls(userPolls)
-        setUser(user);
-        console.log("AFTER SETS IN USEREFFECT");
       } catch (err) {
         setError(err.message);
       } finally {
@@ -73,7 +62,7 @@ const UserPolls = () => {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, []);
+  }, [polls, userId]);
 
 
 
