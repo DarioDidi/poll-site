@@ -1,3 +1,5 @@
+export const ITEMS_PER_PAGE = 6;
+
 export interface PollsUser {
   id: string;
   email: string;

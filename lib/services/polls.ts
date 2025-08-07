@@ -1,5 +1,5 @@
 import { createClient } from '../supabase/client'
-import { Poll, PollOption } from '../types'
+import { ITEMS_PER_PAGE, Poll, PollOption } from '../types'
 import { CreatePollData } from '../schemas/poll';
 
 export const getCurrentUser = async () => {
@@ -244,3 +244,60 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[] 
   //   totalVotes,
   // }
 }
+
+
+
+export const fetchPaginatedPolls = async (
+  query: string,
+  currentPage: number,
+): Promise<Poll[]> => {
+  const supabase = createClient();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const { data, error } = await supabase
+    .from('polls')
+    .select(`
+      id, 
+      question,
+      options,
+      isAnonymous:is_anonymous,
+      createdAt:created_at,
+      creatorId:creator_id,
+      expiryDate:expiry_date,
+      creator:users(id, email),
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
+    `).order('created_at', { ascending: false }).limit(ITEMS_PER_PAGE).range(offset, offset + ITEMS_PER_PAGE);
+
+  //votes:votes(count, pollId:poll_id, userId:user_id, optionIndex:option_index)
+  if (error) {
+    console.error('Error fetching polls:', error);
+    throw error;
+  }
+
+
+  return data.map(poll => {
+    const totalVotes = poll.votes.length || 0;
+    const optionsWithVotes = poll.options.map((text: string, index: number) => {
+      const votesForOption = poll.votes.filter((vote) => vote.optionIndex === index).length;
+      return {
+        id: index,
+        text,
+        votes: votesForOption
+      }
+    });
+
+    const optionsWithPercentage = optionsWithVotes.map((option: PollOption) => ({
+      ...option,
+      percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
+    }));
+
+
+    return {
+      ...poll,
+      creator: poll.creator,
+      options: optionsWithPercentage,
+      totalVotes,
+    };
+  })
+};
+
+
