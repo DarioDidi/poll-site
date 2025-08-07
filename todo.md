@@ -3,9 +3,9 @@ fix text color for dark mode
 fix size of propmpt boxes in poll
 (DONE)only show chart if already voted
 (DONE)limit vote to 1 per user(remove option if already voted)
-timeout polls
+(DONE)timeout polls
 filter active vs timed out
-search by title
+(DONE)search by title
 
 optional: set polls that start in the future
 

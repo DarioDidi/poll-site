@@ -105,46 +105,49 @@ const VotePage = () => {
 
 	//<div className="max-w-4xl mx-auto py-8 px-4">
 	return (
-		<Form action={`/polls/${poll?.id}`} className="space-y-4 max-w-6xl px-40" >
-			{
-				poll?.options.map((option) => (
-					<div key={option.id} className="flex items-center">
-						<input
-							type="radio"
-							id={`option-${option.id}`}
-							name="poll-option"
-							checked={selectedOption === option.id}
-							onChange={() => setSelectedOption(option.id)}
-							className="h-4 w-4 text-purple-600 focus:ring-purple-500"
-						/>
-						<label
-							htmlFor={`option-${option.id}`}
-							className="ml-3 block text-sm font-medium text-gray-700"
-						>
-							{option.text}
-						</label>
-					</div>
-				))
-			}
+		<div className="flex flex-col max-w-2xl mx-auto py-8 px-4">
+			<h1 className="text-3xl font-bold text-gray-500 mb-2">{poll.question}</h1>
+			<Form action={`/polls/${poll?.id}`} className="space-y-4 max-w-6xl " >
+				{
+					poll?.options.map((option) => (
+						<div key={option.id} className="flex items-center">
+							<input
+								type="radio"
+								id={`option-${option.id}`}
+								name="poll-option"
+								checked={selectedOption === option.id}
+								onChange={() => setSelectedOption(option.id)}
+								className="h-4 w-4 text-purple-600 focus:ring-purple-500"
+							/>
+							<label
+								htmlFor={`option-${option.id}`}
+								className="ml-3 block text-sm font-medium text-gray-700"
+							>
+								{option.text}
+							</label>
+						</div>
+					))
+				}
 
-			{
-				error && (
-					<div className="text-red-500 text-sm mt-2">{error}</div>
-				)
-			}
+				{
+					error && (
+						<div className="text-red-500 text-sm mt-2">{error}</div>
+					)
+				}
 
-			<div className="flex w-32 items-center">
-				<Button
-					type="submit"
-					onClick={handleVote}
-					disabled={selectedOption === null || isSubmitting}
-					className="w-full mt-4"
-					isLoading={isSubmitting}
-				>
-					Submit Vote
-				</Button>
-			</div>
-		</Form >
+				<div className="flex w-32 items-center">
+					<Button
+						type="submit"
+						onClick={handleVote}
+						disabled={selectedOption === null || isSubmitting}
+						className="w-full mt-4"
+						isLoading={isSubmitting}
+					>
+						Submit Vote
+					</Button>
+				</div>
+			</Form >
+		</div>
 	);
 };
 

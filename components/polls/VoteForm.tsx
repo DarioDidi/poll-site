@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/client";
 import { Poll } from "@/lib/types";
 import { useState } from "react";
 import Button from "../common/Button";
-import { useRouter } from "next/navigation";
 import Form from 'next/form'
 
 interface VoteFormProps {
@@ -12,7 +11,6 @@ interface VoteFormProps {
 }
 
 const VoteForm = ({ poll }: VoteFormProps) => {
-  const router = useRouter()
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

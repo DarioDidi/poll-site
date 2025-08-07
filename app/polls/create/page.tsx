@@ -10,13 +10,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/common/Button";
 import { FaCheck, FaPlus, FaQuestion, FaTrash } from "react-icons/fa";
-import Footer from "@/components/common/Footer";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 
 type FormData = z.infer<typeof CreatePollSchema>
-//type FormData = z.input<typeof CreatePollSchema>, any, z.output<typeof CreatePollSchema>;
 
 const CreatePollPage = () => {
   const router = useRouter();
@@ -25,7 +23,7 @@ const CreatePollPage = () => {
   const [error, setError] = useState<string | null>(null);
   const defaultEndDate = new Date();
   defaultEndDate.setDate(defaultEndDate.getDate() + 7);
-  const [endDate, setEndDate] = useState<Date>(defaultEndDate);
+  const [endDate, setEndDate] = useState<Date | null>(defaultEndDate);
 
 
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<FormData>({
@@ -84,7 +82,7 @@ const CreatePollPage = () => {
           options: data.options.filter(opt => opt.trim() !== ''),
           is_anonymous: data.isAnonymous,
           creator_id: user.id,
-          expiry_date: endDate.toISOString()
+          expiry_date: endDate?.toISOString()
         })
         .select()
         .single();
@@ -93,7 +91,7 @@ const CreatePollPage = () => {
 
       //success redirect
       router.push(`/polls/${poll.id}`)
-    } catch (err: unknown) {
+    } catch (err) {
       console.error('Error creating poll:', err);
       setError(err.message || 'Failed to create poll');
     } finally {
@@ -147,7 +145,7 @@ const CreatePollPage = () => {
               id="question"
               type="text"
               {...register('question')}
-              className={`pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm ${errors.question ? 'border-red-500' : 'border'
+              className={`pl-10 block w-full h-16 rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm ${errors.question ? 'border-red-500' : 'border'
                 }`}
               placeholder="Enter your question here"
             />
@@ -168,7 +166,7 @@ const CreatePollPage = () => {
                 <input
                   type="text"
                   {...register(`options.${index}` as const)}
-                  className={`pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm ${errors.options?.[index] ? 'border-red-500' : 'border'
+                  className={`pl-10 block w-full h-10 rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm ${errors.options?.[index] ? 'border-red-500' : 'border'
                     }`}
                   placeholder={`Option ${index + 1}`}
                 />

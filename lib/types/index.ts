@@ -1,10 +1,12 @@
 export const ITEMS_PER_PAGE = 6;
 
-export interface PollsUser {
-  id: string;
-  email: string;
-  //name: string;
-}
+//export interface PollsUser {
+//  id: string;
+//  email: string;
+//  //name: string;
+//}
+
+export type PollsUser = { id: string; email: string; };
 
 export interface Poll {
   id: string;

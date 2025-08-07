@@ -4,7 +4,6 @@ import PollChart from "@/components/charts/PollChart";
 import Button from "@/components/common/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DeleteConfirmation from "@/components/polls/DeleteModal";
-import VoteForm from "@/components/polls/VoteForm";
 import { fetchPollById } from "@/lib/services/polls";
 import { createClient } from "@/lib/supabase/client";
 import { Poll } from "@/lib/types";

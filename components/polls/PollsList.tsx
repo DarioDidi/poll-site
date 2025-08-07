@@ -14,7 +14,9 @@ import { ITEMS_PER_PAGE } from "@/lib/types";
 const PollList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const searchParams = useSearchParams();
-  let { polls, loading, error } = useSelector((state: RootState) => state.polls);
+  const stateData = useSelector((state: RootState) => state.polls);
+  const { loading, error } = stateData;
+  let { polls } = stateData;
   console.log("fecthed state polls in POLlList", polls);
   const supabase = createClient();
 
