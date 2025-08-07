@@ -51,11 +51,19 @@ const CreatePollPage = () => {
   }
 
   //Filter for exiration time selector
+  //max 7 days expiration time
   const withinWeek = (date: Date) => {
     const weekFromNow = new Date();
     const startDate = new Date();
+    const yday = new Date();
+    yday.setDate(yday.getDate() - 1);
     weekFromNow.setDate(startDate.getDate() + 7)
-    return new Date() < date && date < weekFromNow
+    return yday <= date && date < weekFromNow
+  }
+
+  // min 1 hour expiration time
+  const withinHour = (t: Date) => {
+    return ((new Date()).getHours() + 1) < (t.getHours())
   }
 
   const onSubmit = async (data: FormData) => {
@@ -85,7 +93,6 @@ const CreatePollPage = () => {
 
       //success redirect
       router.push(`/polls/${poll.id}`)
-      router.refresh()
     } catch (err: unknown) {
       console.error('Error creating poll:', err);
       setError(err.message || 'Failed to create poll');
@@ -204,11 +211,12 @@ const CreatePollPage = () => {
 
         <p> Add Expiry: </p>
         <span className="text-red-500"> NOTE: all surveys last for a max of 7 days</span>
-        <div className="flex items-center">
+        <div className="flex border border-purple-200 max-w-56">
           <DatePicker
             showTimeSelect
             selected={endDate}
             filterDate={withinWeek}
+            filterTime={withinHour}
             onChange={(date) => setEndDate(date)}
             endDate={endDate}
             startDate={new Date()}

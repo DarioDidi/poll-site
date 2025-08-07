@@ -110,8 +110,15 @@ const PollPage = () => {
 	}
 
 	const vote_cast = poll.votes.find((e) => e.userId === user?.id);
-	//console.log("vote cast:", vote_cast, "poll.options:", poll.options);
-	//console.log(poll.options[vote_cast!.optionIndex]);
+	const expiryDate = new Date(poll.expiryDate);
+	const milliDiff: number = expiryDate.getTime()
+		- new Date().getTime();
+	const totalSeconds = Math.floor(milliDiff / 1000);
+	const totalMinutes = Math.floor(totalSeconds / 60);
+	const remMinutes = totalMinutes % 60
+	const totalHours = Math.floor(totalMinutes / 60);
+	const remHours = totalHours % 24;
+	const totalDays = Math.floor(totalHours / 24);
 	return (
 		<div className="max-w-4xl mx-auto py-8 px-4">
 			<div className="mb-8">
@@ -129,21 +136,12 @@ const PollPage = () => {
 								day: 'numeric',
 							})}
 						</span>
-						<span className="mx-2">•</span>
-						<span className="text-sm">
-							{`Expires on `}
-						</span>
-						<span className="mx-2">•</span>
-						<span className="text-sm">
-							{new Date(poll.expiryDate).toLocaleDateString('en-US', {
-								year: 'numeric',
-								month: 'short',
-								day: 'numeric',
-								hour: 'numeric'
-							})}
-						</span>
-
 					</div>
+					<span className="text-red-400">Expiry {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
+						{
+							expiryDate > new Date() ? ""
+								: " ago"
+						}</span>
 					{
 						poll.creator && poll.creator?.id === user?.id
 							? <Button variant="danger" onClick={() => setModalOpen(true)}>
@@ -157,13 +155,20 @@ const PollPage = () => {
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{
-					vote_cast ?
+					(vote_cast || expiryDate < new Date()) ?
 						<>
 							<div className="rounded-lg shadow-md p-6">
 								<h2 className="text-xl font-semibold mb-4">
-									Already voted! for: <span className="text-green-400">
-										{poll.options[vote_cast.optionIndex].text}
-									</span>
+									{vote_cast ?
+										<>
+											Already voted! for: <span className="text-green-400">
+												{poll.options[vote_cast.optionIndex].text}
+											</span>
+										</>
+										: expiryDate < new Date() ?
+											<span className="text-red-300"> Poll Expired </span>
+											: ""
+									}
 								</h2>
 							</div>
 							<div className="rounded-lg shadow-md p-6">
