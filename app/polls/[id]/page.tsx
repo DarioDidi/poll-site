@@ -111,8 +111,10 @@ const PollPage = () => {
 
 	const vote_cast = poll.votes.find((e) => e.userId === user?.id);
 	const expiryDate = new Date(poll.expiryDate);
-	const milliDiff: number = expiryDate.getTime()
-		- new Date().getTime();
+	const isExpired = new Date() > expiryDate
+	const milliDiff: number = isExpired
+		? new Date().getTime() - expiryDate.getTime()
+		: expiryDate.getTime() - new Date().getTime()
 	const totalSeconds = Math.floor(milliDiff / 1000);
 	const totalMinutes = Math.floor(totalSeconds / 60);
 	const remMinutes = totalMinutes % 60
@@ -139,8 +141,8 @@ const PollPage = () => {
 					</div>
 					<span className="text-red-400">Expiry {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
 						{
-							expiryDate > new Date() ? ""
-								: " ago"
+							isExpired ? " ago"
+								: ""
 						}</span>
 					{
 						poll.creator && poll.creator?.id === user?.id
@@ -157,7 +159,7 @@ const PollPage = () => {
 				{
 					(vote_cast || expiryDate < new Date()) ?
 						<>
-							<div className="rounded-lg shadow-md p-6">
+							<div className="rounded-lg shadow-md p-6 border">
 								<h2 className="text-xl font-semibold mb-4">
 									{vote_cast ?
 										<>
@@ -171,8 +173,12 @@ const PollPage = () => {
 									}
 								</h2>
 							</div>
-							<div className="rounded-lg shadow-md p-6">
-								<h2 className="text-xl font-semibold mb-4">Live Results</h2>
+							<div className="rounded-lg shadow-md p-6 border">
+								{
+									isExpired ?
+										<h2 className="text-xl font-semibold mb-4">Final Results</h2>
+										: <h2 className="text-xl font-semibold mb-4">Live Results</h2>
+								}
 								<div className="mt-1">
 									<p className="text-gray-600 text-sm">
 										Total votes: <span className="font-semibold">{poll.totalVotes}</span>
@@ -188,7 +194,6 @@ const PollPage = () => {
 								onClick={() => router.push(`/polls/${poll.id}/vote`)}
 							>
 								<span className="text-green-500">Vote</span>
-
 							</Button>
 						</div>
 				}

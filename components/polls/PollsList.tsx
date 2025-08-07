@@ -47,7 +47,7 @@ const PollList = () => {
   polls = polls.filter((item) => item.question.includes(query));
 
   //PAGINATION
-  const totalPages = polls.length / ITEMS_PER_PAGE;
+  const totalPages = Math.ceil(polls.length / ITEMS_PER_PAGE);
   const currentPage = Number(searchParams.get('page')) || 1;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   polls = polls.slice(offset, offset + ITEMS_PER_PAGE);
