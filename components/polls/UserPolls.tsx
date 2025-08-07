@@ -7,10 +7,14 @@ import PollCard from "./PollCard";
 import { fetchUserPolls } from "@/lib/services/polls";
 import { Poll } from "@/lib/types";
 import LoadingSpinner from "../common/LoadingSpinner";
-
+import { useSearchParams } from "next/navigation";
+import Pagination from "./Pagination";
+import { ITEMS_PER_PAGE } from "@/lib/types";
+import Search from "./SearchPolls";
 
 const UserPolls = () => {
   const params = useParams<{ id: string }>()
+  const searchParams = useSearchParams();
   const { id } = params;
   const userId = id;
   const [polls, setPolls] = useState<Poll[] | null>(null);
@@ -64,6 +68,16 @@ const UserPolls = () => {
     };
   }, [userId]);
 
+  let filteredPolls = polls;
+  //SEARCH
+  const query = searchParams.get('query') || '';
+  filteredPolls = (filteredPolls?.filter((item) => item.question.includes(query)) || null);
+
+  //PAGINATION
+  const totalPages = Math.ceil(((polls?.length || 1) / ITEMS_PER_PAGE));
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  filteredPolls = (filteredPolls?.slice(offset, offset + ITEMS_PER_PAGE) || null);
 
 
   if (loading) {
@@ -84,15 +98,21 @@ const UserPolls = () => {
 
   {/*<div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 mt-10">*/ }
   return (
-    <div className="grid:grid-cols">
-      {
-        polls?.length === 0
-          ? <p className="text-center justify-center">No polls yet :(</p>
-          : polls?.map(poll => (
-            <PollCard key={poll.id} poll={poll} />
-          ))
-      }
-    </div >
+    <div>
+      <Search placeholder="Search polls..." />
+      <div className="grid:grid-cols">
+        {
+          filteredPolls?.length === 0
+            ? <p className="text-center justify-center">No polls yet :(</p>
+            : filteredPolls?.map(poll => (
+              <PollCard key={poll.id} poll={poll} />
+            ))
+        }
+      </div >
+      <div className="mt-5 flex w-full justify-center">
+        <Pagination totalPages={totalPages} />
+      </div>
+    </div>
   )
 };
 

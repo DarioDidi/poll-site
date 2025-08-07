@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import PollCard from "./PollCard";
 import Search from "./SearchPolls";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Pagination from "./Pagination";
 import { ITEMS_PER_PAGE } from "@/lib/types";
 
