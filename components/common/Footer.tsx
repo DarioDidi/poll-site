@@ -1,3 +1,4 @@
+import { FaGithub } from "react-icons/fa";
 import { ThemeSwitcher } from "../theme-switcher"
 
 const Footer: React.FC = () => {
@@ -5,14 +6,22 @@ const Footer: React.FC = () => {
     <p>
       Powered by{" "}
       <a
-        href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
+        href="https://github.com/DarioDidi"
         target="_blank"
         className="font-bold hover:underline"
         rel="noreferrer"
       >
-        Supabase
+        DD
       </a>
     </p>
+    <a
+      href="https://github.com/DarioDidi"
+      target="_blank"
+      className="font-bold hover:underline"
+      rel="noreferrer"
+    >
+      <FaGithub />
+    </a>
     <ThemeSwitcher />
   </footer>
   )

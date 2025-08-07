@@ -8,7 +8,6 @@ interface PollCardProps {
 }
 
 const PollCard: React.FC<PollCardProps> = ({ poll }) => {
-  console.log("Poll card poll:", poll);
   const formattedDate = new Date(poll.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
