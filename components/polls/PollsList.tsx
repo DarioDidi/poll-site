@@ -16,12 +16,9 @@ const PollList = () => {
   const stateData = useSelector((state: RootState) => state.polls);
   const { loading, error, statusFilter } = stateData;
   let { polls } = stateData;
-  console.log("fecthed state polls in POLlList", polls);
 
   if (loading) return <div>Loading polls one sec...</div>;
   if (error) return <div>Error: {error}</div>;
-
-  console.log("Polls:", polls);
 
   // Filter by active or expired
   switch (statusFilter) {

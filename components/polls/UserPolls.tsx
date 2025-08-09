@@ -14,7 +14,7 @@ const UserPolls = () => {
   const userId = id;
   const dispatch = useDispatch<AppDispatch>();
   const stateData = useSelector((state: RootState) => state.polls);
-  console.log("in user polls");
+
   useEffect(() => {
     const supabase = createClient();
     if (!userId) return;

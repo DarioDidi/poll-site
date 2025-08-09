@@ -29,7 +29,6 @@ export const fetchPolls = async (): Promise<Poll[]> => {
 
   //votes:votes(count, pollId:poll_id, userId:user_id, optionIndex:option_index)
   if (error) {
-    console.error('Error fetching polls:', error);
     throw error;
   }
 
@@ -77,10 +76,8 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
     .single();
 
   if (error) {
-    console.error('Error fetching poll:', error);
     return null;
   }
-  console.log("fetched poll:", data)
 
   // get votes for each option in the poll
   const optionWithVotes = data.options.map((text: string, index: number) => {
@@ -99,7 +96,6 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
     percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
   }));
 
-  console.log("options w %:", optionsWithPercentage);
 
   return {
     ...data,
@@ -125,7 +121,6 @@ export const createPoll = async (pollData: CreatePollData, userId: string | null
 
 
   if (error) {
-    console.error('Error creating poll:', error);
     throw error;
   }
 
@@ -154,7 +149,6 @@ export const voteOnPoll = async (pollId: string, optionIndex: number, userId?: s
     });
 
   if (error) {
-    console.error('Error voting on poll:', error);
     throw error;
   }
 
@@ -168,7 +162,6 @@ export const voteOnPoll = async (pollId: string, optionIndex: number, userId?: s
 
 
 export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[]> => {
-  console.log("fetching polls for user:", userId)
   const { data, error } = await createClient()
     .from('polls')
     .select(`
@@ -187,13 +180,10 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[]>
 
   //.single();
 
-  console.log("user polls:", data);
   if (error) {
-    console.error('Error fetching poll:', error);
     return [];
   }
 
-  console.log("user polls:", data);
 
   return data.map(poll => {
     const totalVotes = poll.votes.length || 0;
@@ -245,7 +235,6 @@ export const fetchPaginatedPolls = async (
 
   //votes:votes(count, pollId:poll_id, userId:user_id, optionIndex:option_index)
   if (error) {
-    console.error('Error fetching polls:', error);
     throw error;
   }
 
