@@ -33,6 +33,8 @@ export interface Vote {
   pollId: string;
   userId?: string;
   optionIndex: number;
+  poll: { id: string, options: string[], question: string };
+  createdAt: Date;
 }
 
 export interface CreatePollData {
