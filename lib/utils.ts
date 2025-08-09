@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Poll } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,3 +45,20 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+
+export const calcExpiry = (poll: Poll) => {
+  const expiryDate = new Date(poll.expiryDate);
+  const isExpired = new Date() > expiryDate
+  const milliDiff: number = isExpired
+    ? new Date().getTime() - expiryDate.getTime()
+    : expiryDate.getTime() - new Date().getTime()
+  const totalSeconds = Math.floor(milliDiff / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const remMinutes = totalMinutes % 60
+  const totalHours = Math.floor(totalMinutes / 60);
+  const remHours = totalHours % 24;
+  const totalDays = Math.floor(totalHours / 24);
+
+  return [isExpired, totalDays, remHours, remMinutes]
+}

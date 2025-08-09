@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Poll } from '../../lib/types';
 import { FaChartBar, FaVoteYea, FaUser, FaClock } from 'react-icons/fa';
+import { calcExpiry } from '@/lib/utils';
 
 interface PollCardProps {
   poll: Poll;
@@ -14,8 +15,9 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
     day: 'numeric',
   });
 
+  const [isExpired, totalDays, remHours, remMinutes] = calcExpiry(poll);
   return (
-    <div className=" rounded-lg  shadow-purple-200 overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-400 py-4 my-10 border border-purple-200 ">
+    <div className=" rounded-lg  shadow-purple-200 overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-200 py-4 my-10 border border-purple-200 ">
       <div className="p-6">
         <h3 className="text-xl font-semibold  mb-2">{poll.question}</h3>
 
@@ -28,8 +30,18 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
 
         <div className="flex items-center text-gray-400 mb-4">
           <FaClock className="mr-2" />
-          <span className="text-sm">{formattedDate}</span>
+          <span className="text-sm">Created {formattedDate}</span>
         </div>
+        <div className="flex items-center text-gray-400 mb-4">
+          <FaClock className="mr-2" />
+          <span className="text-red-400">Expiry {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
+            {
+              isExpired ? " ago"
+                : ""
+            }</span>
+
+        </div>
+
 
         <div className="mb-4">
           {poll.options.slice(0, 3).map((option, index) => (

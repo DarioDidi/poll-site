@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 import Pagination from "./Pagination";
 import { ITEMS_PER_PAGE } from "@/lib/types";
 import Search from "./SearchPolls";
+import Link from "next/link";
 
 const UserPolls = () => {
   const params = useParams<{ id: string }>()
@@ -75,7 +76,8 @@ const UserPolls = () => {
   filteredPolls = (filteredPolls?.filter((item) => item.question.includes(query)) || null);
 
   //PAGINATION
-  const totalPages = Math.ceil(((polls?.length || 1) / ITEMS_PER_PAGE));
+  filteredPolls = (filteredPolls?.filter((item) => item.creator?.id === userId) || null);
+  const totalPages = Math.ceil(((filteredPolls?.length || 1) / ITEMS_PER_PAGE));
   const currentPage = Number(searchParams.get('page')) || 1;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   filteredPolls = (filteredPolls?.slice(offset, offset + ITEMS_PER_PAGE) || null);
@@ -104,7 +106,10 @@ const UserPolls = () => {
       <div className="grid:grid-cols">
         {
           filteredPolls?.length === 0
-            ? <p className="text-center justify-center">No polls yet :(</p>
+            ? <div className="flex flex-col items-center">
+              <p className="text-center justify-center">No polls yet :(</p>
+              <Link href={"/polls/create"} className="text-blue-500">Create Poll</Link>
+            </div>
             : filteredPolls?.map(poll => (
               <PollCard key={poll.id} poll={poll} />
             ))

@@ -20,6 +20,7 @@ const NavBar = async () => {
               <>
                 <Link href={"/polls/create"}>Create Poll</Link>
                 <Link href={`/polls/user/${user.id}`}>Your Polls</Link>
+                <Link href={`/polls/user/${user.id}/votes`}>Your Votes</Link>
               </>
               : ""
           }
