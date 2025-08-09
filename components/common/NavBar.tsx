@@ -18,9 +18,9 @@ const NavBar = async () => {
           {
             user ?
               <>
-                <Link href={"/polls/create"}>Create Poll</Link>
-                <Link href={`/polls/user/${user.id}`}>Your Polls</Link>
-                <Link href={`/polls/user/${user.id}/votes`}>Your Votes</Link>
+                <Link href={"/create"}>Create Poll</Link>
+                <Link href={`/user/${user.id}`}>Your Polls</Link>
+                <Link href={`/user/${user.id}/votes`}>Your Votes</Link>
               </>
               : ""
           }
