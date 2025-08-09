@@ -41,8 +41,8 @@ const VotePage = () => {
 	}, [id]);
 
 	useEffect(() => {
-		const vote_cast = poll?.votes.find((e) => e.userId === user?.id);
-		if (vote_cast) {
+		const voteCast = poll?.votes.find((e) => e.userId === user?.id);
+		if (voteCast) {
 			alert("Already voted")
 			router.push(`/polls/${poll?.id}`)
 			return;

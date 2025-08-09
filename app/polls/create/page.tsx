@@ -59,9 +59,10 @@ const CreatePollPage = () => {
     return yday <= date && date < weekFromNow
   }
 
-  // min 1 hour expiration time
+  // if within the same day, min 1 hour expiration time
   const withinHour = (t: Date) => {
-    return ((new Date()).getHours() + 1) < (t.getHours())
+    return (new Date().getDate() < t.getDate()) ||
+      ((new Date()).getHours() + 1) < t.getHours()
   }
 
   const onSubmit = async (data: FormData) => {

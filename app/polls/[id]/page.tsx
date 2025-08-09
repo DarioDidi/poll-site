@@ -110,7 +110,8 @@ const PollPage = () => {
 	}
 
 
-	const [isExpired, totalDays, remHours, remMinutes] = calcExpiry(poll);
+	const [expiryDate, isExpired, totalDays, remHours, remMinutes] = calcExpiry(poll);
+	const voteCast = poll?.votes.find((e) => e.userId === user?.id);
 
 	return (
 		<div className="max-w-4xl mx-auto py-8 px-4">
@@ -148,14 +149,14 @@ const PollPage = () => {
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{
-					(vote_cast || expiryDate < new Date()) ?
+					(voteCast || expiryDate < new Date()) ?
 						<>
 							<div className="rounded-lg shadow-md p-6 border">
 								<h2 className="text-xl font-semibold mb-4">
-									{vote_cast ?
+									{voteCast ?
 										<>
 											Already voted! for: <span className="text-green-400">
-												{poll.options[vote_cast.optionIndex].text}
+												{poll.options[voteCast.optionIndex].text}
 											</span>
 										</>
 										: expiryDate < new Date() ?
