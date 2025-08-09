@@ -1,5 +1,5 @@
 import { AuthButton } from "@/components/auth-components/auth-button";
-import PollList from "@/components/polls/PollsList";
+import AllPolls from "@/components/polls/AllPolls";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -23,7 +23,7 @@ export default async function Home() {
                 <AuthButton />
               </section>
             }
-            <PollList />
+            <AllPolls />
           </main>
         </div>
       </div>

@@ -29,7 +29,7 @@ const UserVotesPage = () => {
     };
 
     fetchVotes();
-  }, [id]);
+  }, [id, supabase]);
 
   console.log("user id:", id, "votes:", votes);
   return (

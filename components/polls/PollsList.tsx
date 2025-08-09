@@ -1,52 +1,46 @@
 'use client';
 
-import { createClient } from "@/lib/supabase/client";
-import { fetchPollsAsync } from "@/store/features/pollSlice";
-import { AppDispatch, RootState } from "@/store/store"
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux"
 import PollCard from "./PollCard";
 import Search from "./SearchPolls";
 import { useSearchParams } from "next/navigation";
 import Pagination from "./Pagination";
-import { ITEMS_PER_PAGE } from "@/lib/types";
+import { ITEMS_PER_PAGE, Poll } from "@/lib/types";
+import PollStatusFilter from "./PollStatusFilter";
+import { checkActive } from "@/lib/utils";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+
 
 const PollList = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const searchParams = useSearchParams();
   const stateData = useSelector((state: RootState) => state.polls);
-  const { loading, error } = stateData;
+  const { loading, error, statusFilter } = stateData;
   let { polls } = stateData;
   console.log("fecthed state polls in POLlList", polls);
-  const supabase = createClient();
-
-  useEffect(() => {
-    dispatch(fetchPollsAsync());
-
-    // realtime subscription to any changes in supabase db polls table
-    const subscription = supabase
-      .channel('polls_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'polls' }, () => {
-        dispatch(fetchPollsAsync());
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(subscription)
-    };
-
-  }, [dispatch, supabase]);
-
 
   if (loading) return <div>Loading polls one sec...</div>;
   if (error) return <div>Error: {error}</div>;
 
-
   console.log("Polls:", polls);
+
+  // Filter by active or expired
+  switch (statusFilter) {
+    case "all":
+      break;
+    case "active":
+      polls = polls.filter(checkActive)
+      break;
+    case "expired":
+      polls = polls.filter((p: Poll) => !checkActive(p))
+      break;
+    default:
+      break;
+  }
+
 
   //SEARCH
   const query = searchParams.get('query') || '';
-  polls = polls.filter((item) => item.question.includes(query));
+  polls = polls.filter((item: Poll) => item.question.includes(query));
 
   //PAGINATION
   const totalPages = Math.ceil(polls.length / ITEMS_PER_PAGE);
@@ -56,7 +50,10 @@ const PollList = () => {
 
   return (
     <div>
-      <Search placeholder="Search polls..." />
+      <div className="">
+        <Search placeholder="Search polls..." />
+        <PollStatusFilter />
+      </div>
       <div className="grid:grid-cols">
         {
           polls.length === 0

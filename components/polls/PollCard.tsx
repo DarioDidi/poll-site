@@ -15,24 +15,24 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
     day: 'numeric',
   });
 
-  const [isExpired, totalDays, remHours, remMinutes] = calcExpiry(poll);
+  const { isExpired, totalDays, remHours, remMinutes } = calcExpiry(poll);
   return (
     <div className=" rounded-lg  shadow-purple-200 overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-200 py-4 my-10 border border-purple-200 ">
       <div className="p-6">
         <h3 className="text-xl font-semibold  mb-2">{poll.question}</h3>
 
-        <div className="flex items-center text-gray-400 mb-4">
+        <div className="flex items-center text-gray-500 mb-4">
           <FaUser className="mr-2" />
           <span className="text-sm">
             {poll.isAnonymous ? 'Anonymous poll' : `By ${poll.creator?.email || poll.creator?.email}`}
           </span>
         </div>
 
-        <div className="flex items-center text-gray-400 mb-4">
+        <div className="flex items-center text-gray-500 mb-4">
           <FaClock className="mr-2" />
           <span className="text-sm">Created {formattedDate}</span>
         </div>
-        <div className="flex items-center text-gray-400 mb-4">
+        <div className="flex items-center text-gray-500 mb-4">
           <FaClock className="mr-2" />
           <span className="text-red-400">Expiry {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
             {
@@ -47,7 +47,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
           {poll.options.slice(0, 3).map((option, index) => (
             <div key={index} className="mb-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-400">{option.text}</span>
+                <span className="text-gray-500">{option.text}</span>
                 <span className="font-medium">{option.percentage}%</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">

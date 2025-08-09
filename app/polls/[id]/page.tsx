@@ -110,7 +110,7 @@ const PollPage = () => {
 	}
 
 
-	const [expiryDate, isExpired, totalDays, remHours, remMinutes] = calcExpiry(poll);
+	const { isExpired, totalDays, remHours, remMinutes } = calcExpiry(poll);
 	const voteCast = poll?.votes.find((e) => e.userId === user?.id);
 
 	return (
@@ -149,7 +149,7 @@ const PollPage = () => {
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{
-					(voteCast || expiryDate < new Date()) ?
+					(voteCast || isExpired) ?
 						<>
 							<div className="rounded-lg shadow-md p-6 border">
 								<h2 className="text-xl font-semibold mb-4">
@@ -159,7 +159,7 @@ const PollPage = () => {
 												{poll.options[voteCast.optionIndex].text}
 											</span>
 										</>
-										: expiryDate < new Date() ?
+										: isExpired ?
 											<span className="text-red-300"> Poll Expired </span>
 											: ""
 									}

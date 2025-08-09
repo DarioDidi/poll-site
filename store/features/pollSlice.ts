@@ -1,5 +1,5 @@
 import useUser from "@/hooks/useUser";
-import { createPoll, fetchPolls, voteOnPoll } from "@/lib/services/polls";
+import { createPoll, fetchPolls, fetchUserPolls, voteOnPoll } from "@/lib/services/polls";
 import { Poll } from "@/lib/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -8,13 +8,15 @@ interface PollsState {
 	loading: boolean;
 	error: string | null;
 	currentPoll: Poll | null;
+	statusFilter: 'all' | 'active' | 'expired';
 }
 
 const initialState: PollsState = {
 	polls: [],
 	loading: false,
 	error: null,
-	currentPoll: null
+	currentPoll: null,
+	statusFilter: 'all'
 };
 
 
@@ -22,6 +24,14 @@ export const fetchPollsAsync = createAsyncThunk(
 	'polls/fetchPolls',
 	async () => {
 		const response = await fetchPolls();
+		return response;
+	}
+);
+
+export const fetchUserPollsAsync = createAsyncThunk(
+	'polls/fetchUserPolls',
+	async (id: string) => {
+		const response = await fetchUserPolls(id);
 		return response;
 	}
 );
@@ -34,7 +44,6 @@ export const createPollAsync = createAsyncThunk(
 		return response;
 	}
 );
-
 
 export const voteAsync = createAsyncThunk(
 	'polls/vote',
@@ -50,6 +59,9 @@ const pollsSlice = createSlice({
 	reducers: {
 		setCurrentPoll: (state, action: PayloadAction<Poll>) => {
 			state.currentPoll = action.payload;
+		},
+		setPollFilter: (state, action) => {
+			state.statusFilter = action.payload;
 		}
 	},
 
@@ -66,6 +78,18 @@ const pollsSlice = createSlice({
 			.addCase(fetchPollsAsync.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message || 'Failed to fetch polls'
+			})
+			.addCase(fetchUserPollsAsync.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(fetchUserPollsAsync.fulfilled, (state, action) => {
+				state.loading = false;
+				state.polls = action.payload;
+			})
+			.addCase(fetchUserPollsAsync.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message || 'Failed to fetch User polls'
 			})
 			.addCase(createPollAsync.pending, (state) => {
 				state.loading = true;
@@ -99,4 +123,5 @@ const pollsSlice = createSlice({
 })
 
 export const { setCurrentPoll } = pollsSlice.actions;
+export const { setPollFilter } = pollsSlice.actions;
 export default pollsSlice.reducer;

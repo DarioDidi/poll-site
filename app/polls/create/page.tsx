@@ -131,11 +131,11 @@ const CreatePollPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Create a New Poll</h1>
+      <h1 className="text-2xl font-bold text-gray-500 mb-6">Create a New Poll</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
-          <label htmlFor="question" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="question" className="block text-xl font-medium text-gray-500 mb-1">
             Poll Question
           </label>
           <div className="relative">
@@ -157,7 +157,7 @@ const CreatePollPage = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Poll Options</label>
+          <label className="block text-xl font-medium text-gray-500 mb-2">Poll Options</label>
           {options.map((_, index) => (
             <div key={index} className="flex items-center mb-2">
               <div className="relative flex-grow">
@@ -184,6 +184,7 @@ const CreatePollPage = () => {
               )}
             </div>
           ))}
+
           {errors.options?.message && (
             <p className="mt-1 text-sm text-red-600">{errors.options.message}</p>
           )}

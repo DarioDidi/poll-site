@@ -16,7 +16,7 @@ const VoteCard = ({ vote }: { vote: Vote }) => {
         </div>
         <div className="flex items-center text-gray-500">
           <FaVoteYea className="mr-1" />
-          <p>Your choice: {vote.poll?.options[vote.optionIndex]}</p>
+          <p>Your choice: <span className="text-green-400">{vote.poll?.options[vote.optionIndex]}</span></p>
         </div>
       </div>
     </div>

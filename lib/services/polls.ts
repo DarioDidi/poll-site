@@ -167,7 +167,8 @@ export const voteOnPoll = async (pollId: string, optionIndex: number, userId?: s
 }
 
 
-export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[] | null> => {
+export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[]> => {
+  console.log("fetching polls for user:", userId)
   const { data, error } = await createClient()
     .from('polls')
     .select(`
@@ -181,14 +182,15 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[] 
       creator:users(id, email),
       votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
     `)
-    .eq('creator.id', userId)
+    .eq('creator_id', userId)
     .order('created_at', { ascending: false });
 
   //.single();
 
+  console.log("user polls:", data);
   if (error) {
     console.error('Error fetching poll:', error);
-    return null;
+    return [];
   }
 
   console.log("user polls:", data);
@@ -217,32 +219,6 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[] 
       totalVotes,
     };
   })
-
-  // get votes for each option in the poll
-  // const optionWithVotes = data.options.map((text: string, index: number) => {
-  //   const votesForOption = data.votes.filter((vote) => vote.optionIndex === index).length;
-  //   return {
-  //     id: index,
-  //     text,
-  //     votes: votesForOption
-  //   }
-  // })
-
-  // const totalVotes = data.votes.length;
-
-  // const optionsWithPercentage = optionWithVotes.map((option: PollOption) => ({
-  //   ...option,
-  //   percentage: totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0,
-  // }));
-
-  // console.log("options w %:", optionsWithPercentage);
-
-  // return {
-  //   ...data,
-  //   creator: data.creator,
-  //   options: optionsWithPercentage,
-  //   totalVotes,
-  // }
 }
 
 

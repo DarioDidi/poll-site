@@ -60,5 +60,10 @@ export const calcExpiry = (poll: Poll) => {
   const remHours = totalHours % 24;
   const totalDays = Math.floor(totalHours / 24);
 
-  return [expiryDate, isExpired, totalDays, remHours, remMinutes]
+  return { isExpired, totalDays, remHours, remMinutes }
+}
+
+
+export const checkActive = (poll: Poll) => {
+  return new Date() < new Date(poll.expiryDate)
 }

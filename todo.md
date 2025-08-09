@@ -12,4 +12,4 @@ optional: set polls that start in the future
 IMPORTANT: CHECK TEXT COLORS IN DIFFERENT THEMES
 
 remove console.logs
-
+metadata and SEO
