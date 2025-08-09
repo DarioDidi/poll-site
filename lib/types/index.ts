@@ -52,3 +52,12 @@ export interface ApiResponse<T> {
 export interface ErrorResponseData {
   message: string
 }
+
+
+export interface DateRange {
+  from: string,
+  to: string
+}
+
+export const defaultDateRange: DateRange =
+  { from: new Date('01-07-2025').toISOString(), to: new Date('01-01-2030').toISOString() }

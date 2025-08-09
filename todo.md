@@ -1,15 +1,12 @@
 (DONE)fix date on view poll by id
-fix text color for dark mode
-fix size of propmpt boxes in poll
+(DONE)fix size of propmpt boxes create in poll
 (DONE)only show chart if already voted
 (DONE)limit vote to 1 per user(remove option if already voted)
 (DONE)timeout polls
-filter active vs timed out
+(DONE)filter active vs timed out
 (DONE)search by title
-
-optional: set polls that start in the future
 
 IMPORTANT: CHECK TEXT COLORS IN DIFFERENT THEMES
 
-remove console.logs
+(DONE) remove console.logs
 metadata and SEO

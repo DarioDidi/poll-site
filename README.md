@@ -1,6 +1,4 @@
-An interactive online polling platform where users can vote on polls and view live results. The project includes real-time updates, dynamic data visualizations, and seamless user interaction.
-
-A full-stack polling application with live results visualization, built with Next.js, Supabase, and Redux. Users can create, vote, and track polls in real-time with beautiful data visualizations.
+A full-stack polling application with live results visualization, built with Next.js, Supabase, and Redux. Users can create, vote, and track polls in real-time with dynamic data visualizations.
 
 ## ✨ Features
 

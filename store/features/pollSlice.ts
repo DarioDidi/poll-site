@@ -1,6 +1,6 @@
 import useUser from "@/hooks/useUser";
 import { createPoll, fetchPolls, fetchUserPolls, voteOnPoll } from "@/lib/services/polls";
-import { Poll } from "@/lib/types";
+import { Poll, DateRange, defaultDateRange } from "@/lib/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PollsState {
@@ -9,6 +9,7 @@ interface PollsState {
 	error: string | null;
 	currentPoll: Poll | null;
 	statusFilter: 'all' | 'active' | 'expired';
+	dateFilter: DateRange,
 }
 
 const initialState: PollsState = {
@@ -16,7 +17,8 @@ const initialState: PollsState = {
 	loading: false,
 	error: null,
 	currentPoll: null,
-	statusFilter: 'all'
+	statusFilter: 'all',
+	dateFilter: defaultDateRange
 };
 
 
@@ -62,6 +64,9 @@ const pollsSlice = createSlice({
 		},
 		setPollFilter: (state, action) => {
 			state.statusFilter = action.payload;
+		},
+		setDateFilter: (state, action) => {
+			state.dateFilter = action.payload;
 		}
 	},
 
@@ -124,4 +129,5 @@ const pollsSlice = createSlice({
 
 export const { setCurrentPoll } = pollsSlice.actions;
 export const { setPollFilter } = pollsSlice.actions;
+export const { setDateFilter } = pollsSlice.actions;
 export default pollsSlice.reducer;

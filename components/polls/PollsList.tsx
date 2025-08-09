@@ -9,12 +9,13 @@ import PollStatusFilter from "./PollStatusFilter";
 import { checkActive } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { DateRangeFilter } from "./DateRangeFilter";
 
 
 const PollList = () => {
   const searchParams = useSearchParams();
   const stateData = useSelector((state: RootState) => state.polls);
-  const { loading, error, statusFilter } = stateData;
+  const { loading, error, statusFilter, dateFilter } = stateData;
   let { polls } = stateData;
 
   if (loading) return <div>Loading polls one sec...</div>;
@@ -34,6 +35,16 @@ const PollList = () => {
       break;
   }
 
+  //filter by date range 
+  polls = polls.filter((p: Poll) => {
+    const fromDate = new Date(dateFilter.from);
+    const toDate = new Date(dateFilter.to);
+    const pollCreated = new Date(p.createdAt);
+    console.log("created:", pollCreated, "from date", fromDate, "gt", pollCreated > fromDate)
+    return pollCreated > fromDate
+      && pollCreated < toDate
+  })
+
 
   //SEARCH
   const query = searchParams.get('query') || '';
@@ -50,6 +61,7 @@ const PollList = () => {
       <div className="">
         <Search placeholder="Search polls..." />
         <PollStatusFilter />
+        <DateRangeFilter />
       </div>
       <div className="grid:grid-cols">
         {
