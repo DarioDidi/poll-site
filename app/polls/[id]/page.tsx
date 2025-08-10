@@ -144,11 +144,11 @@ const PollPage = () => {
 							})}
 						</span>
 					</div>
-					<span className="text-red-400">Expiry {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
-						{
-							isExpired ? " ago"
-								: ""
-						}</span>
+
+					<span className={isExpired ? "text-red-400" : "text-green-400"}>
+						{isExpired ? "Voting closed" : "Open for"} {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
+						{isExpired ? " ago" : ""}
+					</span>
 					{
 						creator && creator.id === user?.id
 							? <Button variant="danger" onClick={() => setModalOpen(true)}>
