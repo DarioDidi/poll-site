@@ -70,7 +70,10 @@ const CreatePollPage = () => {
       setError('You must be logged in to create a poll');
       return;
     }
-
+    if (!data.question || data.options.some(opt => !opt.trim()) || data.options.length < 2) {
+      setError("Please fill all fields");
+      return;
+    }
     setIsLoading(true);
     setError(null);
 

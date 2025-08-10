@@ -10,67 +10,81 @@ import { checkActive } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { DateRangeFilter } from "./DateRangeFilter";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 
 const PollList = () => {
   const searchParams = useSearchParams();
   const stateData = useSelector((state: RootState) => state.polls);
   const { loading, error, statusFilter, dateFilter } = stateData;
-  let { polls } = stateData;
+  const { polls } = stateData;
 
-  if (loading) return <div>Loading polls one sec...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  // Filter by active or expired
-  switch (statusFilter) {
-    case "all":
-      break;
-    case "active":
-      polls = polls.filter(checkActive)
-      break;
-    case "expired":
-      polls = polls.filter((p: Poll) => !checkActive(p))
-      break;
-    default:
-      break;
-  }
-
-  //filter by date range 
-  polls = polls.filter((p: Poll) => {
-    const fromDate = new Date(dateFilter.from);
-    const toDate = new Date(dateFilter.to);
-    const pollCreated = new Date(p.createdAt);
-    console.log("created:", pollCreated, "from date", fromDate, "gt", pollCreated > fromDate)
-    return pollCreated > fromDate
-      && pollCreated < toDate
-  })
-
-
-  //SEARCH
-  const query = searchParams.get('query') || '';
-  polls = polls.filter((item: Poll) => item.question.includes(query));
-
-  //PAGINATION
-  const totalPages = Math.ceil(polls.length / ITEMS_PER_PAGE);
+  const [currPolls, setCurrentPolls] = useState<Poll[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const currentPage = Number(searchParams.get('page')) || 1;
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-  polls = polls.slice(offset, offset + ITEMS_PER_PAGE);
+  const query = searchParams.get('query') || '';
+
+  useEffect(() => {
+    let filtered = [...polls];
+
+    // Status filter
+    if (statusFilter === "active") {
+      filtered = filtered.filter(checkActive);
+    } else if (statusFilter === "expired") {
+      filtered = filtered.filter(p => !checkActive(p));
+    }
+
+    // Date filter
+    if (dateFilter?.from && dateFilter?.to) {
+      filtered = filtered.filter(p => {
+        try {
+          const fromDate = new Date(dateFilter.from);
+          const toDate = new Date(dateFilter.to);
+          const pollCreated = new Date(p.createdAt);
+          return pollCreated >= fromDate && pollCreated <= toDate;
+        } catch {
+          return true;
+        }
+      });
+    }
+
+    // Search filter
+    if (query) {
+      filtered = filtered.filter(p =>
+        p.question.toLowerCase().includes(query)
+      );
+    }
+
+    // Pagination
+    const totalFiltered = filtered.length;
+    setTotalPages(Math.ceil(totalFiltered / ITEMS_PER_PAGE));
+
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    setCurrentPolls(filtered.slice(offset, offset + ITEMS_PER_PAGE));
+  }, [polls, query, dateFilter, statusFilter, currentPage]);
+
+
+  if (loading) return <div><LoadingSpinner /></div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
       <div>
-        <Search placeholder="Search polls..." />
-        <PollStatusFilter />
+        <span className="flex flex-row justify-between gap-40 mb-2">
+          <Search placeholder="Search polls..." />
+          <PollStatusFilter />
+        </span>
         <span className="flex flex-row gap-2 font-semibold">
-          {"Pick Range   "}
+          {"Date Range   "}
           <DateRangeFilter />
         </span>
       </div>
       <div className="grid:grid-cols">
         {
-          polls.length === 0
+          currPolls.length === 0
             ? <p className="text-center justify-center">No polls yet :(</p>
-            : polls.map(poll => (
+            : currPolls.map(poll => (
               <PollCard key={poll.id} poll={poll} />
             ))
         }
