@@ -3,14 +3,22 @@
 import { setPollFilter } from "@/store/features/pollSlice";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { createPageURL } from "./Pagination";
 
 const PollStatusFilter = () => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+
   const dispatch = useDispatch();
   const options = ['all', 'active', 'expired'];
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
   useEffect(() => {
     dispatch(setPollFilter(selectedStatus));
+    replace(createPageURL(pathname, searchParams, 1));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStatus, dispatch]);
 
 

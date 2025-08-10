@@ -23,14 +23,15 @@ export const fetchPolls = async (): Promise<Poll[]> => {
       createdAt:created_at,
       creatorId:creator_id,
       expiryDate:expiry_date,
-      creator:users(id, email),
-      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
+      creator:users!creator_id(id, email),
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index, createdAt:created_at)
     `).order('created_at', { ascending: false });
 
   //votes:votes(count, pollId:poll_id, userId:user_id, optionIndex:option_index)
   if (error) {
     throw error;
   }
+
 
 
   return data.map(poll => {
@@ -70,8 +71,8 @@ export const fetchPollById = async (id: string | string[]): Promise<Poll | null>
       createdAt:created_at,
       creatorId:creator_id,
       expiryDate:expiry_date,
-      creator:users(id, email),
-      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
+      creator:users!creator_id(id, email),
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index, createdAt:created_at)
     `).eq('id', id)
     .single();
 
@@ -172,8 +173,8 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[]>
       createdAt:created_at,
       creatorId:creator_id,
       expiryDate:expiry_date,
-      creator:users(id, email),
-      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
+      creator:users!creator_id(id, email),
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index, createdAt:created_at)
     `)
     .eq('creator_id', userId)
     .order('created_at', { ascending: false });
@@ -214,7 +215,6 @@ export const fetchUserPolls = async (userId: string | string[]): Promise<Poll[]>
 
 
 export const fetchPaginatedPolls = async (
-  query: string,
   currentPage: number,
 ): Promise<Poll[]> => {
   const supabase = createClient();
@@ -229,8 +229,8 @@ export const fetchPaginatedPolls = async (
       createdAt:created_at,
       creatorId:creator_id,
       expiryDate:expiry_date,
-      creator:users(id, email),
-      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index)
+      creator:users!creator_id(id, email),
+      votes:votes(id, pollId:poll_id, userId:user_id, optionIndex:option_index, createdAt:created_at)
     `).order('created_at', { ascending: false }).limit(ITEMS_PER_PAGE).range(offset, offset + ITEMS_PER_PAGE);
 
   //votes:votes(count, pollId:poll_id, userId:user_id, optionIndex:option_index)

@@ -83,7 +83,7 @@ const PollList = () => {
       <div className="grid:grid-cols">
         {
           currPolls.length === 0
-            ? <p className="text-center justify-center">No polls yet :(</p>
+            ? <p className="text-center justify-center">No polls Found :(</p>
             : currPolls.map(poll => (
               <PollCard key={poll.id} poll={poll} />
             ))

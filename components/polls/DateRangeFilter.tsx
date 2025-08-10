@@ -4,13 +4,20 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch } from "react-redux";
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { createPageURL } from "./Pagination";
 
 export function DateRangeFilter() {
-  const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const dispatch = useDispatch();
+  const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange);
 
   useEffect(() => {
     dispatch(setDateFilter(dateRange));
+    replace(createPageURL(pathname, searchParams, 1));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange, dispatch]);
 
   return (

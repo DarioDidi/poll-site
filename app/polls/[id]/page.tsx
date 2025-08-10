@@ -6,7 +6,7 @@ import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DeleteConfirmation from "@/components/polls/DeleteModal";
 import { fetchPollById } from "@/lib/services/polls";
 import { createClient } from "@/lib/supabase/client";
-import { Poll } from "@/lib/types";
+import { Poll, PollsUser } from "@/lib/types";
 import { calcExpiry } from "@/lib/utils";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation"
@@ -22,6 +22,16 @@ const PollPage = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [user, setUser] = useState<User | null>(null);
 	const [isModalOpen, setModalOpen] = useState<boolean>(false);
+	const [creator, setCreator] = useState<PollsUser | null>(null)
+
+	useEffect(() => {
+		if (poll?.creator) {
+			const creator = Array.isArray(poll.creator)
+				? poll.creator[0]
+				: poll.creator;
+			setCreator(creator);
+		}
+	}, [poll])
 
 	//fetch a poll by id
 	useEffect(() => {
@@ -120,7 +130,10 @@ const PollPage = () => {
 				<div className="flex items-center text-gray-400 justify-between">
 					<div>
 						<span className="text-sm">
-							{poll.isAnonymous ? 'Anonymous poll' : `Created by ${poll.creator?.email}`}
+							{
+								poll.isAnonymous ? 'Anonymous poll'
+									: creator ? `Created by ${creator.email}` : "Anonymous"
+							}
 						</span>
 						<span className="mx-2">•</span>
 						<span className="text-sm">
@@ -137,7 +150,7 @@ const PollPage = () => {
 								: ""
 						}</span>
 					{
-						poll.creator && poll.creator?.id === user?.id
+						creator && creator.id === user?.id
 							? <Button variant="danger" onClick={() => setModalOpen(true)}>
 								Delete Poll
 							</Button>

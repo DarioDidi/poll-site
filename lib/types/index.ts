@@ -15,7 +15,8 @@ export interface Poll {
   isAnonymous: boolean;
   createdAt: Date;
   creatorId: string;
-  creator?: PollsUser | null;
+  creator?: PollsUser[];
+  //creator?: User;
   totalVotes: number;
   votes: Vote[];
   expiryDate: Date;
@@ -28,13 +29,27 @@ export interface PollOption {
   percentage?: number
 }
 
+interface votePoll {
+  id: string;
+  options: string[];
+  question: string;
+}
+
 export interface Vote {
   id: string;
   pollId: string;
   userId?: string;
   optionIndex: number;
-  poll: { id: string, options: string[], question: string };
   createdAt: Date;
+}
+
+export interface FullVote {
+  id: string;
+  pollId: string;
+  userId?: string;
+  optionIndex: number;
+  createdAt: Date;
+  poll: votePoll;
 }
 
 export interface CreatePollData {

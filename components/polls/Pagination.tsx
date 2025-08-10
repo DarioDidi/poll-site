@@ -5,18 +5,19 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/lib/utils';
 
-import { usePathname, useSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams, usePathname, useSearchParams } from 'next/navigation';
+
+export const createPageURL = (pathname: string, searchParams: ReadonlyURLSearchParams, pageNumber: number | string) => {
+  const params = new URLSearchParams(searchParams);
+  params.set('page', pageNumber.toString());
+  return `${pathname}?${params.toString()}`;
+};
+
 
 const Pagination = ({ totalPages }: { totalPages: number }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
-
-  const createPageURL = (pageNumber: number | string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', pageNumber.toString());
-    return `${pathname}?${params.toString()}`;
-  };
 
   const allPages = generatePagination(currentPage, totalPages);
 
@@ -25,7 +26,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
       <div className="inline-flex">
         <PaginationArrow
           direction="left"
-          href={createPageURL(currentPage - 1)}
+          href={createPageURL(pathname, searchParams, currentPage - 1)}
           isDisabled={currentPage <= 1}
         />
 
@@ -41,7 +42,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
             return (
               <PaginationNumber
                 key={`${page}-${index}`}
-                href={createPageURL(page)}
+                href={createPageURL(pathname, searchParams, page)}
                 page={page}
                 position={position}
                 isActive={currentPage === page}
@@ -52,7 +53,7 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
 
         <PaginationArrow
           direction="right"
-          href={createPageURL(currentPage + 1)}
+          href={createPageURL(pathname, searchParams, currentPage + 1)}
           isDisabled={currentPage >= totalPages}
         />
       </div>

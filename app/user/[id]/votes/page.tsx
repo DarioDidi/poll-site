@@ -1,13 +1,13 @@
 'use client'
 
 import { createClient } from "@/lib/supabase/client";
-import { Vote } from "@/lib/types";
+import { FullVote } from "@/lib/types";
 import { useEffect, useState } from "react";
 import VoteCard from "@/components/polls/VoteCard";
 import { useParams } from "next/navigation";
 
 const UserVotesPage = () => {
-  const [votes, setVotes] = useState<Vote[]>([]);
+  const [votes, setVotes] = useState<FullVote[]>([]);
   const supabase = createClient();
 
   const params = useParams<{ id: string }>()

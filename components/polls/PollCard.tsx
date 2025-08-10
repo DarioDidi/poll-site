@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Poll } from '../../lib/types';
+import { Poll, PollsUser } from '../../lib/types';
 import { FaChartBar, FaVoteYea, FaUser, FaClock } from 'react-icons/fa';
 import { calcExpiry } from '@/lib/utils';
 
@@ -15,7 +15,18 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
     day: 'numeric',
   });
 
+  const [creator, setCreator] = useState<PollsUser | null>(null)
+  useEffect(() => {
+    if (poll.creator) {
+      const creator = Array.isArray(poll.creator)
+        ? poll.creator[0]
+        : poll.creator;
+      setCreator(creator);
+    }
+  }, [poll])
+
   const { isExpired, totalDays, remHours, remMinutes } = calcExpiry(poll);
+
   return (
     <div className=" rounded-lg  shadow-purple-200 overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-200 py-4 my-10 border border-purple-200 ">
       <div className="p-6">
@@ -24,7 +35,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
         <div className="flex items-center text-gray-500 mb-4">
           <FaUser className="mr-2" />
           <span className="text-sm">
-            {poll.isAnonymous ? 'Anonymous poll' : `By ${poll.creator?.email || poll.creator?.email}`}
+            {poll.isAnonymous ? 'Anonymous poll' : `By ${creator ? creator.email : ""}`}
           </span>
         </div>
 
