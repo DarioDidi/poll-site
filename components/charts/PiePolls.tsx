@@ -162,7 +162,7 @@ const PollChart = ({ poll }: { poll: Poll }) => {
                 fill="#8884d8"
                 dataKey="percentage"
                 nameKey="text"
-                label={({ name, percent }) => percent ? `${name}: ${(percent * 100).toFixed(0)}%` : `${name}`}
+                label={({ name, percent }) => percent ? `${name}: ${(percent * 100).toFixed(0)}%` : ""}
               >
                 {dataWithColors.map((entry, index) => (
                   <Cell
