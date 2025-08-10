@@ -106,7 +106,7 @@ const VotePage = () => {
 	//<div className="max-w-4xl mx-auto py-8 px-4">
 	return (
 		<div className="flex flex-col max-w-2xl mx-auto py-8 px-4">
-			<h1 className="text-3xl font-bold text-gray-500 mb-2">{poll.question}</h1>
+			<h1 className="text-3xl font-bold  mb-2">{poll.question}</h1>
 			<Form action={`/polls/${poll?.id}`} className="space-y-4 max-w-6xl " >
 				{
 					poll?.options.map((option) => (
@@ -117,11 +117,11 @@ const VotePage = () => {
 								name="poll-option"
 								checked={selectedOption === option.id}
 								onChange={() => setSelectedOption(option.id)}
-								className="h-4 w-4 text-purple-600 focus:ring-purple-500"
+								className="h-4 w-4 text-gray-600 focus:ring-purple-500"
 							/>
 							<label
 								htmlFor={`option-${option.id}`}
-								className="ml-3 block text-sm font-medium text-gray-700"
+								className="ml-3 block text-lg font-medium text-blue-700"
 							>
 								{option.text}
 							</label>

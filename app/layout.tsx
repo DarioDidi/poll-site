@@ -82,7 +82,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+      <body className={`${geistSans.className} antialiased min-h-screen`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

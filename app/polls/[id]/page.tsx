@@ -178,19 +178,6 @@ const PollPage = () => {
 									}
 								</h2>
 							</div>
-							<div className="rounded-lg shadow-md p-6 border">
-								{
-									isExpired ?
-										<h2 className="text-xl font-semibold mb-4">Final Results</h2>
-										: <h2 className="text-xl font-semibold mb-4">Live Results</h2>
-								}
-								<div className="mt-1">
-									<p className="text-gray-600 text-sm">
-										Total votes: <span className="font-semibold">{poll.totalVotes}</span>
-									</p>
-								</div>
-								<PollChart poll={poll} />
-							</div>
 						</>
 						:
 						<div className="rounded-lg shadow-md p-6">
@@ -202,6 +189,20 @@ const PollPage = () => {
 							</Button>
 						</div>
 				}
+				<div className="rounded-lg shadow-md p-6 border">
+					{
+						isExpired ?
+							<h2 className="text-xl font-semibold mb-4">Final Results</h2>
+							: <h2 className="text-xl font-semibold mb-4">Live Results</h2>
+					}
+					<div className="mt-1">
+						<p className="text-gray-600 text-sm">
+							Total votes: <span className="font-semibold">{poll.totalVotes}</span>
+						</p>
+					</div>
+					<PollChart poll={poll} />
+				</div>
+
 			</div>
 
 			{
