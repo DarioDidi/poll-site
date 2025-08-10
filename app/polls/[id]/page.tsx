@@ -1,6 +1,6 @@
 'use client'
 
-import PollChart from "@/components/charts/PollChart";
+import PollChart from "@/components/charts/PiePolls";
 import Button from "@/components/common/Button";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import DeleteConfirmation from "@/components/polls/DeleteModal";

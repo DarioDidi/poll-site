@@ -1,5 +1,6 @@
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import type { Viewport } from 'next'
 import "./globals.css";
 
 import Providers from "@/store/Providers";
@@ -62,7 +63,9 @@ export const metadata: Metadata = {
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
-  manifest: '/site.webmanifest',
+}
+
+export const viewport: Viewport = {
   themeColor: '#4F46E5',
 }
 
