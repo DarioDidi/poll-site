@@ -39,9 +39,10 @@ const PollList = () => {
     if (dateFilter?.from && dateFilter?.to) {
       filtered = filtered.filter(p => {
         try {
-          const fromDate = new Date(dateFilter.from);
-          const toDate = new Date(dateFilter.to);
-          const pollCreated = new Date(p.createdAt);
+          const fromDate = new Date(dateFilter.from).setHours(0, 0, 0, 0);;
+          const toDate = new Date(dateFilter.to).setHours(0, 0, 0, 0);;
+          const pollCreated = new Date(p.createdAt).setHours(0, 0, 0, 0);;
+          console.log("from:", fromDate, "to:", toDate, "created:", pollCreated)
           return pollCreated >= fromDate && pollCreated <= toDate;
         } catch {
           return true;
