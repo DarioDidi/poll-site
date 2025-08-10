@@ -56,13 +56,13 @@ A full-stack polling application with live results visualization, built with Nex
 
 Route Method Description
 ```
-/ GET Fetch paginated polls
-/create POST Create new poll
-/polls/[id] GET Get single poll with votes
-/polls/[id]/vote POST Submit vote
-/user/[id] GET user's polls
-/user/[id]/votes GET user's votes
-/auth/* Supabase auth handlers
+/                 GET Fetch paginated polls
+/create           POST Create new poll
+/polls/[id]       GET Get single poll with votes
+/polls/[id]/vote  POST Submit vote
+/user/[id]        GET user's polls
+/user/[id]/votes  GET user's votes
+/auth/*           Auth handlers
 ```
 
 ## 🚀 Getting Started
