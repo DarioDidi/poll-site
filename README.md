@@ -18,9 +18,9 @@ A full-stack polling application with live results visualization, built with Nex
 | Frontend          | Next.js 14, TypeScript, Tailwind CSS  |
 | State Management  | Redux Toolkit                         |
 | Database          | Supabase (PostgreSQL)                 |
-| Authentication    | Supabase Auth                         |
+| Authentication    | JWT Auth                         |
 | Visualization     | Recharts                              |
-| UI Components     | ShadCN/ui                             |
+| UI Components     | Radix-ui                             |
 | Deployment        | Vercel                                |
 
 ### Site Routes
@@ -42,15 +42,13 @@ A full-stack polling application with live results visualization, built with Nex
 │   └── update-password # password change
 │       
 ├── / # base page with all polls
-├── polls
-│   ├── create # create polls
-│   │   
-│   ├── [id] # view a poll [id]
-│   │   └── vote # vote on poll [id]
-│   │       
-│   └── user
-│       └── [id] # user view owned polls
-│           └── votes #user view own votes
+├── create # create a poll
+├── polls 
+│   └── [id] # view a poll by [id]
+│       └── vote # vote on a poll [id]
+└── user
+    └── [id] # view polls created by user [id]
+        └── votes # view votes by user [id]
 ```
 
 
@@ -59,9 +57,11 @@ A full-stack polling application with live results visualization, built with Nex
 Route Method Description
 ```
 / GET Fetch paginated polls
-/polls/create POST Create new poll
+/create POST Create new poll
 /polls/[id] GET Get single poll with votes
 /polls/[id]/vote POST Submit vote
+/user/[id] GET user's polls
+/user/[id]/votes GET user's votes
 /auth/* Supabase auth handlers
 ```
 
@@ -76,22 +76,21 @@ Route Method Description
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/coddd3r/poll-site.git
+   git clone https://github.com/DarioDidi/poll-site.git
    cd poll-site
-Install dependencies:
-```
-npm install
-```
-Set up environment variables:
-``````cp .env.example .env.local
-Fill in your Supabase credentials:
-env
-NEXT_PUBLIC_SUPABASE_URL=your-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-``````
+2. Install dependencies:
+   ```bash
+   npm install
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env.local
+4. Fill in your Supabase credentials:
+   ```bash
+   //.env
+   NEXT_PUBLIC_SUPABASE_URL=your-project-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
+5. Run the development server:
+   ```bash
+   npm run dev
 
-Run the development server:
-
-bash
-npm run dev
