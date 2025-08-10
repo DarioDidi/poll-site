@@ -89,7 +89,6 @@ const PollChart = ({ poll }: { poll: Poll }) => {
       name: option.text
     }))
   ), [poll.options]);
-  console.log("data with colors:", dataWithColors);
 
   return (
     <div className="space-y-4">
