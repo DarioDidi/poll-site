@@ -17,13 +17,22 @@ export function DateRangeFilter() {
     <div className="flex gap-2 items-center">
       <DatePicker
         selected={new Date(dateRange?.from)}
-        onChange={(date) => setDateRange({ from: date!.toISOString(), to: dateRange?.to! })}
+        onChange={
+          (date) =>
+            date
+              ? setDateRange({ from: date.toISOString(), to: dateRange.to })
+              : ""
+        }
         placeholderText="Start date"
       />
-      <span>to</span>
+      <span className="font-semibold">to</span>
       <DatePicker
         selected={new Date(dateRange?.to)}
-        onChange={(date) => setDateRange({ from: dateRange?.from!, to: date!.toISOString() })}
+        onChange={
+          (date) => date
+            ? setDateRange({ from: dateRange.from, to: date.toISOString() })
+            : ""
+        }
         placeholderText="End date"
         minDate={new Date(dateRange?.from)}
       />

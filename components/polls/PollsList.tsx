@@ -58,10 +58,13 @@ const PollList = () => {
 
   return (
     <div>
-      <div className="">
+      <div>
         <Search placeholder="Search polls..." />
         <PollStatusFilter />
-        <DateRangeFilter />
+        <span className="flex flex-row gap-2 font-semibold">
+          {"Pick Range   "}
+          <DateRangeFilter />
+        </span>
       </div>
       <div className="grid:grid-cols">
         {

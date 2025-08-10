@@ -34,11 +34,10 @@ const PollCard: React.FC<PollCardProps> = ({ poll }) => {
         </div>
         <div className="flex items-center text-gray-500 mb-4">
           <FaClock className="mr-2" />
-          <span className="text-red-400">Expiry {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
-            {
-              isExpired ? " ago"
-                : ""
-            }</span>
+          <span className={isExpired ? "text-red-400" : "text-green-400"}>
+            {isExpired ? "Voting closed" : "Open for"} {`${totalDays} days ${remHours} hours ${remMinutes} mins`}
+            {isExpired ? " ago" : ""}
+          </span>
 
         </div>
 
